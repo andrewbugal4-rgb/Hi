@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23ff4da6'/%3E%3Ctext x='50' y='70' font-size='60' font-family='Arial' font-weight='bold' fill='white' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23ff4da6'/%3E%3Ctext x='50' y='70' font-size='60' font-family='Arial' font-weight='bold' fill='white' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#ff4da6">
 <title>SIRIAN</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
@@ -10,6 +13,7 @@ body{background:#0b141a;color:#e9edef;font-size:14px}
 .top{position:sticky;top:0;z-index:20;background:#0b141a;padding:12px 16px 8px}
 .top-row{display:flex;justify-content:space-between;align-items:center}
 .logo{font-size:20px;font-weight:700;letter-spacing:.2px}
+.logo span{color:#ff4da6}
 .top-icons{display:flex;gap:18px;font-size:18px;color:#aebac1}
 .search{background:#202c33;border-radius:22px;display:flex;align-items:center;gap:10px;padding:9px 14px;margin-top:12px}
 .search input{background:transparent;border:none;outline:none;color:#fff;width:100%;font-size:14px}
@@ -17,14 +21,14 @@ body{background:#0b141a;color:#e9edef;font-size:14px}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:10px 16px 4px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{white-space:nowrap;padding:6px 12px;border-radius:18px;background:#202c33;color:#aebac1;font-size:12.5px;border:none}
-.chip.on{background:#00a884;color:#fff}
+.chip.on{background:#ff4da6;color:#fff}
 .container{max-width:520px;margin:0 auto;padding-bottom:78px}
 .card{background:#111b21;border-radius:12px;padding:16px;margin:12px 16px}
 input,textarea{width:100%;padding:11px 12px;margin:7px 0;border-radius:10px;border:1px solid #2a3942;background:#202c33;color:#fff;font-size:14px;outline:none}
 input::placeholder,textarea::placeholder{color:#8696a0}
-.btn{width:100%;padding:11px;border:none;border-radius:22px;background:#00a884;color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px}
+.btn{width:100%;padding:11px;border:none;border-radius:22px;background:#ff4da6;color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px}
 .btn2{background:#2a3942}
-.btn-white{background:#fff;color:#00a884}
+.btn-white{background:#fff;color:#ff4da6}
 .small{font-size:12px;color:#8696a0;line-height:1.5}
 .center{text-align:center}
 .page{display:none}
@@ -38,10 +42,10 @@ input::placeholder,textarea::placeholder{color:#8696a0}
 .row-top b{font-size:14.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .time{font-size:11.5px;color:#8696a0;flex-shrink:0}
 .preview{font-size:12.5px;color:#8696a0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
-.badge2{font-size:11px;color:#00a884;border:1px solid #00a884;padding:2px 7px;border-radius:10px}
+.badge2{font-size:11px;color:#ff4da6;border:1px solid #ff4da6;padding:2px 7px;border-radius:10px}
 .badge-gray{font-size:11px;color:#8696a0;border:1px solid #374045;padding:2px 7px;border-radius:10px}
 .msg{background:#202c33;padding:8px 11px;border-radius:12px;margin:5px 0;max-width:82%;font-size:14px;line-height:1.4;width:fit-content}
-.msg.me{background:#005c4b;margin-left:auto}
+.msg.me{background:#ff4da6;margin-left:auto}
 .chat-box{background:#0b141a;height:300px;overflow-y:auto;padding:10px}
 .flex{display:flex;gap:8px;align-items:center}
 .hidden{display:none!important}
@@ -49,8 +53,8 @@ input::placeholder,textarea::placeholder{color:#8696a0}
 .bottom button{flex:1;background:none;border:none;color:#8696a0;padding:8px 0 6px;cursor:pointer;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:3px}
 .bottom button i{font-style:normal;font-size:19px}
 .bottom button.on{color:#fff}
-.bottom button.on i{color:#00a884}
-.fab{position:fixed;bottom:82px;right:16px;width:48px;height:48px;border-radius:14px;background:#00a884;color:#fff;font-size:22px;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4);z-index:25;display:flex;align-items:center;justify-content:center}
+.bottom button.on i{color:#ff4da6}
+.fab{position:fixed;bottom:82px;right:16px;width:48px;height:48px;border-radius:14px;background:#ff4da6;color:#fff;font-size:22px;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4);z-index:25;display:flex;align-items:center;justify-content:center}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:flex-end;justify-content:center}
 .modal.open{display:flex}
 .modal-box{background:#111b21;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;border-radius:18px 18px 0 0;padding:16px 16px 28px}
@@ -58,13 +62,13 @@ input::placeholder,textarea::placeholder{color:#8696a0}
 .close-btn{background:#2a3942;border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer}
 .lang{display:flex;gap:8px}
 .lang button{flex:1;padding:9px;border:1px solid #2a3942;background:transparent;color:#fff;border-radius:20px;cursor:pointer;font-size:13px}
-.lang button.on{background:#00a884;border-color:#00a884}
-.sync{background:#00a884;border-radius:14px;padding:14px;margin-bottom:12px}
+.lang button.on{background:#ff4da6;border-color:#ff4da6}
+.sync{background:#ff4da6;border-radius:14px;padding:14px;margin-bottom:12px}
 .sync b{font-size:14px}
-.sync p{font-size:12px;color:#d8f5e8;margin:6px 0;line-height:1.5}
+.sync p{font-size:12px;color:#ffe0ef;margin:6px 0;line-height:1.5}
 .filter{display:flex;gap:6px;margin:10px 0}
 .filter button{flex:1;padding:7px;border:none;border-radius:18px;background:#202c33;color:#aebac1;cursor:pointer;font-size:12px}
-.filter button.on{background:#00a884;color:#fff}
+.filter button.on{background:#ff4da6;color:#fff}
 .section{padding:14px 16px 4px;font-size:12px;color:#8696a0;letter-spacing:.4px}
 .set-row{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;cursor:pointer}
 .set-row b{font-size:14px;font-weight:500}
@@ -72,12 +76,14 @@ input::placeholder,textarea::placeholder{color:#8696a0}
 .divider{height:1px;background:#1a242b;margin:0 16px}
 .login-wrap{padding:28px 20px;max-width:420px;margin:0 auto}
 .login-wrap h1{font-size:26px;text-align:center;margin:18px 0 6px}
+.login-wrap h1 span{color:#ff4da6}
+.login-icon{width:80px;height:80px;background:#ff4da6;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:bold;color:#fff;margin:0 auto}
 </style>
 </head>
 <body>
 <div id="page-login" class="page active">
   <div class="login-wrap">
-    <div style="text-align:center;font-size:48px">💬</div>
+    <div class="login-icon">S</div>
     <h1>SIRIAN</h1>
     <p class="small center">Chagua lugha / Choose language</p>
     <div class="lang" style="margin:12px 0">
@@ -92,7 +98,7 @@ input::placeholder,textarea::placeholder{color:#8696a0}
         <label style="font-size:13px;color:#aebac1">Code ya Kuthibitisha</label>
         <input id="code" type="tel" placeholder="Weka 123456" maxlength="6">
         <button class="btn" onclick="doLogin()">INGIA KATIKA SIRIAN</button>
-        <p class="small center">Code ni <b style="color:#00a884;font-size:14px">123456</b></p>
+        <p class="small center">Code ni <b style="color:#ff4da6;font-size:14px">123456</b></p>
       </div>
       <p class="small center">Kwa kuendelea unakubali Masharti ya SIRIAN.</p>
     </div>
@@ -131,7 +137,7 @@ input::placeholder,textarea::placeholder{color:#8696a0}
     </div>
     <div id="tab-settings-div" class="hidden">
       <div class="section">ACCOUNT</div>
-      <div class="row" onclick="alert('Profile yako')"><div class="avatar">S</div><div class="row-main"><b>SIRIAN User</b><div class="preview" id="myNumberShow">-</div></div></div>
+      <div class="row" onclick="alert('Profile yako')"><div class="avatar" style="background:#ff4da6">S</div><div class="row-main"><b>SIRIAN User</b><div class="preview" id="myNumberShow">-</div></div></div>
       <div class="section">CONTACTS</div>
       <div style="margin:0 16px">
         <div class="sync">
@@ -171,8 +177,8 @@ input::placeholder,textarea::placeholder{color:#8696a0}
 </div>
 <div id="page-owner" class="page">
   <div class="container" style="padding:20px">
-    <div class="card" style="border:1px solid #ffd700"><h2 style="font-size:18px">Dashboard ya Mmiliki</h2><p class="small">Hii ni yako tu.</p>
-    <p class="small" style="text-align:left">Chats: <b id="statChats" style="color:#00a884">0</b> • Groups: <b id="statGroups" style="color:#00a884">0</b></p>
+    <div class="card" style="border:1px solid #ff4da6"><h2 style="font-size:18px">Dashboard ya Mmiliki</h2><p class="small">Hii ni yako tu.</p>
+    <p class="small" style="text-align:left">Chats: <b id="statChats" style="color:#ff4da6">0</b> • Groups: <b id="statGroups" style="color:#ff4da6">0</b></p>
     <button class="btn" onclick="alert('SIRIAN ni yako milele.')">Jina Langu ni SIRIAN</button><button class="btn btn2" onclick="backToApp()">Rudi Kwenye App</button></div>
   </div>
 </div>
@@ -244,7 +250,7 @@ function openContacts(){document.getElementById('contactModal').classList.add('o
 function closeContacts(){document.getElementById('contactModal').classList.remove('open');document.getElementById('addContactForm').classList.add('hidden');document.getElementById('findResult').innerHTML='';}
 function renderContactList(){let q=(document.getElementById('contactSearch')?.value||'').toLowerCase();let list=myContacts().filter(c=>c.name.toLowerCase().includes(q)||c.phone.includes(q));if(contactFilter==='on')list=list.filter(c=>isOnSirian(c.phone));if(contactFilter==='off')list=list.filter(c=>!isOnSirian(c.phone));let el=document.getElementById('contactList');if(!list.length){el.innerHTML=`<p class="small center" style="padding:16px">Hakuna mtu. Bonyeza Sync Contacts juu.</p>`;return;}el.innerHTML=list.map(c=>{let on=isOnSirian(c.phone);return `<div class="row" onclick="startChatWith('${c.phone}','${c.name.replace(/'/g,'')}')"><div class="avatar">${c.name.charAt(0).toUpperCase()}</div><div class="row-main"><div class="row-top"><b>${c.name}</b>${on?`<span class="badge2">Yupo</span>`:`<span class="badge-gray">Hayupo</span>`}</div><div class="preview">${c.phone}</div></div></div>`;}).join('');}
 function startChatWith(phone,name){let idx=chats.findIndex(c=>normPhone(c.phone)===normPhone(phone));if(idx===-1){chats.unshift({name:name,phone:phone,msgs:[{t:'Karibu SIRIAN!',me:false}]});localStorage.setItem('sirian_chats',JSON.stringify(chats));idx=0;}closeContacts();showTab('chats');renderChats();updateStats();openChat(idx);}
-function findByNumber(){let raw=document.getElementById('findNumber').value.trim();let res=document.getElementById('findResult');if(raw.length<9){res.innerHTML=`<p class="small" style="color:#ffcc00">Andika namba kamili</p>`;return;}let n=normPhone(raw);let mc=myContacts().find(c=>normPhone(c.phone)===n);let on=isOnSirian(n);if(on){res.innerHTML=`<div class="card" style="margin:10px 0;background:#005c4b"><b>${mc?mc.name:'Mtu huyu'} - YUPO SIRIAN</b><br><span class="small" style="color:#fff">${n}</span><button class="btn btn-white" onclick="startChatWith('${n}','${mc?mc.name.replace(/'/g,''):n}')">Anza ku-chat</button></div>`;}else{res.innerHTML=`<div class="card" style="margin:10px 0"><b>Namba hii HAIPO SIRIAN</b><br><span class="small">${n}</span><button class="btn btn2" onclick="navigator.clipboard.writeText('https://andrewbugal4-rgb.github.io/Hi/hi.html');alert('Link imekopiwa')">Copy Link ya SIRIAN</button><button class="btn" onclick="saveNewContactQuick('${n}')">Hifadhi kama Contact</button></div>`;}}
+function findByNumber(){let raw=document.getElementById('findNumber').value.trim();let res=document.getElementById('findResult');if(raw.length<9){res.innerHTML=`<p class="small" style="color:#ffcc00">Andika namba kamili</p>`;return;}let n=normPhone(raw);let mc=myContacts().find(c=>normPhone(c.phone)===n);let on=isOnSirian(n);if(on){res.innerHTML=`<div class="card" style="margin:10px 0;background:#ff4da6"><b>${mc?mc.name:'Mtu huyu'} - YUPO SIRIAN</b><br><span class="small" style="color:#fff">${n}</span><button class="btn btn-white" onclick="startChatWith('${n}','${mc?mc.name.replace(/'/g,''):n}')">Anza ku-chat</button></div>`;}else{res.innerHTML=`<div class="card" style="margin:10px 0"><b>Namba hii HAIPO SIRIAN</b><br><span class="small">${n}</span><button class="btn btn2" onclick="navigator.clipboard.writeText('https://andrewbugal4-rgb.github.io/Hi/hi.html');alert('Link imekopiwa')">Copy Link ya SIRIAN</button><button class="btn" onclick="saveNewContactQuick('${n}')">Hifadhi kama Contact</button></div>`;}}
 function showAddContact(){document.getElementById('addContactForm').classList.remove('hidden');}
 function showAddGroupFromContacts(){closeContacts();showTab('status');alert('Andika jina la Group');}
 function saveNewContact(){let name=document.getElementById('newContactName').value.trim();let phone=document.getElementById('newContactPhone').value.trim();if(!name||phone.length<9)return alert('Weka jina na namba sahihi');let p=normPhone(phone);let on=isOnSirian(p);savedContacts.push({name:name,phone:p,onSirian:on});localStorage.setItem('sirian_contacts',JSON.stringify(savedContacts));document.getElementById('newContactName').value='';document.getElementById('newContactPhone').value='';alert(on?name+' YUPO SIRIAN':name+' HAYUPO SIRIAN');startChatWith(p,name);}
