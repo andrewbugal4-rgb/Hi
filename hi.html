@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SIRIAN - Chat Bila Limiti</title>
+<title>SIRIAN </title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
 body{background:#0b141a;color:#e9edef}
 .header{background:#202c33;padding:15px;text-align:center;font-size:24px;font-weight:bold;color:#00a884;letter-spacing:2px}
 .header span{color:white;font-size:13px;letter-spacing:0;display:block;font-weight:normal}
-.container{max-width:480px;margin:0 auto;padding:15px}
+.container{max-width:480px;margin:0 auto;padding:15px;padding-bottom:90px}
 .card{background:#111b21;border-radius:12px;padding:18px;margin-bottom:12px}
 input,select{width:100%;padding:13px;margin:8px 0;border-radius:8px;border:1px solid #333;background:#202c33;color:white;font-size:16px;outline:none}
 .btn{width:100%;padding:13px;border:none;border-radius:8px;background:#00a884;color:white;font-size:16px;font-weight:bold;cursor:pointer;margin-top:8px}
@@ -24,6 +24,7 @@ input,select{width:100%;padding:13px;margin:8px 0;border-radius:8px;border:1px s
 .chat-item{display:flex;gap:12px;padding:12px;background:#111b21;border-radius:10px;margin-bottom:8px;cursor:pointer;align-items:center}
 .avatar{width:48px;height:48px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;flex-shrink:0}
 .badge{background:#00a884;color:white;font-size:11px;padding:2px 7px;border-radius:10px}
+.badge-gray{background:#374045}
 .msg{background:#005c4b;padding:9px 12px;border-radius:10px;margin:6px 0;max-width:85%}
 .msg.me{background:#00a884;margin-left:auto}
 .chat-box{background:#0b141a;height:320px;overflow-y:auto;padding:10px;border-radius:10px}
@@ -35,6 +36,17 @@ input,select{width:100%;padding:13px;margin:8px 0;border-radius:8px;border:1px s
 .lang-box{display:flex;gap:8px;margin-bottom:10px}
 .lang-box button{flex:1;padding:10px;border:1px solid #00a884;background:transparent;color:white;border-radius:8px;cursor:pointer;font-weight:bold}
 .lang-box button.active{background:#00a884;color:white}
+.search-box{display:flex;gap:8px;background:#202c33;padding:8px 12px;border-radius:25px;margin-bottom:12px;align-items:center}
+.search-box input{background:transparent;border:none;margin:0;padding:8px}
+.fab{position:fixed;bottom:20px;right:20px;width:58px;height:58px;border-radius:50%;background:#00a884;color:white;font-size:28px;border:none;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.5);z-index:99;display:flex;align-items:center;justify-content:center}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+.modal-box{background:#111b21;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;border-radius:20px 20px 0 0;padding:18px;padding-bottom:30px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.close-btn{background:#374045;border:none;color:white;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer}
+.contact-row{display:flex;gap:12px;padding:12px;background:#202c33;border-radius:10px;margin-bottom:8px;cursor:pointer;align-items:center}
+.icon-circle{width:48px;height:48px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.icon-circle.gray{background:#374045}
 </style>
 </head>
 <body>
@@ -65,6 +77,7 @@ input,select{width:100%;padding:13px;margin:8px 0;border-radius:8px;border:1px s
     <button id="btn-sw2" onclick="setLang('sw')">🇹🇿 Kiswahili</button>
     <button id="btn-en2" onclick="setLang('en')">🇬🇧 English</button>
   </div>
+  <div class="search-box">🔍 <input id="searchInput" oninput="filterChats()" data-i18n-ph="search_ph" placeholder="Tafuta mtu / Search..."></div>
   <div class="nav">
     <button id="tab-chats" class="active" onclick="showTab('chats')" data-i18n="chats">Chats</button>
     <button id="tab-groups" onclick="showTab('groups')" data-i18n="groups">Groups</button>
@@ -72,9 +85,6 @@ input,select{width:100%;padding:13px;margin:8px 0;border-radius:8px;border:1px s
     <button id="tab-calls" onclick="showTab('calls')" data-i18n="calls">Calls</button>
   </div>
   <div id="tab-chats-div">
-    <div class="card">
-      <div class="flex"><input id="newName" data-i18n-ph="new_friend" placeholder="Jina la rafiki mpya..."><button class="btn" style="width:90px" onclick="addChat()" data-i18n="new_btn">+ Mpya</button></div>
-    </div>
     <div id="chatList"></div>
   </div>
   <div id="tab-groups-div" class="hidden">
@@ -95,6 +105,7 @@ input,select{width:100%;padding:13px;margin:8px 0;border-radius:8px;border:1px s
     <button class="btn btn2" onclick="closeChat()" data-i18n="back">← Rudi</button>
   </div>
   <button class="btn btn2" onclick="logout()" data-i18n="logout">Toka / Badilisha Namba</button>
+  <button class="fab" onclick="openContacts()">+</button>
 </div>
 <div id="page-owner" class="page">
   <div class="card" style="border:2px solid #ffd700">
@@ -111,67 +122,78 @@ input,select{width:100%;padding:13px;margin:8px 0;border-radius:8px;border:1px s
   </div>
 </div>
 </div>
+
+<!-- MODAL - SELECT CONTACT KAMA WHATSAPP -->
+<div id="contactModal" class="modal" onclick="if(event.target===this) closeContacts()">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div><h3 id="modalTitle">Chagua Mtu</h3><span class="small" id="modalCount" style="margin:0"></span></div>
+      <button class="close-btn" onclick="closeContacts()">✕</button>
+    </div>
+    <div class="search-box">🔍 <input id="contactSearch" oninput="renderContactList()" data-i18n-ph="search_contact_ph" placeholder="Tafuta kwa jina au namba..."></div>
+    <!-- TAFTA KWA NAMBA -->
+    <div class="card" style="margin-bottom:12px">
+      <b data-i18n="find_by_number">🔎 Mtafute Mtu kwa Namba Yake</b>
+      <p class="small" style="text-align:left" data-i18n="find_hint">Andika namba ya mtu aliyejiunga na SIRIAN, mfano +255 7XX XXX XXX</p>
+      <input id="findNumber" type="tel" placeholder="+255 7XX XXX XXX">
+      <button class="btn" onclick="findByNumber()" data-i18n="search_btn">TAFUTA MTU</button>
+      <div id="findResult"></div>
+    </div>
+    <div class="contact-row" onclick="showAddContact()">
+      <div class="icon-circle">👤+</div>
+      <div><b data-i18n="new_contact">New Contact</b><br><span style="color:#8696a0;font-size:13px" data-i18n="new_contact_sub">Weka jina na namba mpya</span></div>
+    </div>
+    <div class="contact-row" onclick="showAddGroupFromContacts()">
+      <div class="icon-circle gray">👥</div>
+      <div><b data-i18n="new_group">New Group</b><br><span style="color:#8696a0;font-size:13px" data-i18n="new_group_sub">Tengeneza Group mpya</span></div>
+    </div>
+    <div id="addContactForm" class="card hidden">
+      <h3 data-i18n="new_contact">New Contact</h3>
+      <input id="newContactName" data-i18n-ph="contact_name_ph" placeholder="Jina la mtu...">
+      <input id="newContactPhone" type="tel" placeholder="+255 7XX XXX XXX">
+      <button class="btn" onclick="saveNewContact()" data-i18n="save_contact">HIFADHI NA CHAT</button>
+    </div>
+    <h3 style="margin:12px 0 8px" data-i18n="contacts_on_sirian">Watu walioko kwenye SIRIAN</h3>
+    <div id="contactList"></div>
+  </div>
+</div>
+
 <script>
 const LANG = {
-sw:{
-welcome_sub:"Chagua lugha / Choose language",
-phone_label:"Namba ya Simu",
-send_code:"Tuma Code",
-code_label:"Code ya Kuthibitisha",
-enter_btn:"INGIA KATIKA SIRIAN →",
-code_is:"Code ya kuingia ni",
-terms:"Kwa kuendelea unakubali Masharti ya SIRIAN.<br>Jina lako halitabadilika kamwe.",
-chats:"Chats",groups:"Groups",status:"Status",calls:"Calls",
-new_friend:"Jina la rafiki mpya...",new_btn:"+ Mpya",
-my_groups:"Groups Zangu",group_sub:"Tengeneza Group, waalike marafiki",
-group_name:"Jina la Group...",create:"Tengeneza",
-my_status:"Status Yangu",status_ph:"Andika Status yako...",put_status:"Weka Status",
-call_sub:"Piga simu bure ndani ya SIRIAN",voice_call:"Piga Sauti",video_call:"Piga Video",
-type_msg:"Andika ujumbe...",send:"Tuma",back:"← Rudi",
-logout:"Toka / Badilisha Namba",users:"Watumiaji",app_name:"Jina la App",back_app:"Rudi Kwenye App"
-},
-en:{
-welcome_sub:"Choose language / Chagua lugha",
-phone_label:"Phone Number",
-send_code:"Send Code",
-code_label:"Verification Code",
-enter_btn:"ENTER SIRIAN →",
-code_is:"Your login code is",
-terms:"By continuing you agree to SIRIAN Terms.<br>Your name will never change.",
-chats:"Chats",groups:"Groups",status:"Status",calls:"Calls",
-new_friend:"New friend name...",new_btn:"+ New",
-my_groups:"My Groups",group_sub:"Create a Group, invite friends",
-group_name:"Group Name...",create:"Create",
-my_status:"My Status",status_ph:"Write your Status...",put_status:"Post Status",
-call_sub:"Call for free inside SIRIAN",voice_call:"Voice Call",video_call:"Video Call",
-type_msg:"Type a message...",send:"Send",back:"← Back",
-logout:"Logout / Change Number",users:"Users",app_name:"App Name",back_app:"Back to App"
-}
+sw:{welcome_sub:"Chagua lugha / Choose language",phone_label:"Namba ya Simu",send_code:"Tuma Code",code_label:"Code ya Kuthibitisha",enter_btn:"INGIA KATIKA SIRIAN →",code_is:"Code ya kuingia ni",terms:"Kwa kuendelea unakubali Masharti ya SIRIAN.<br>Jina lako halitabadilika kamwe.",chats:"Chats",groups:"Groups",status:"Status",calls:"Calls",new_friend:"Jina la rafiki mpya...",new_btn:"+ Mpya",my_groups:"Groups Zangu",group_sub:"Tengeneza Group, waalike marafiki",group_name:"Jina la Group...",create:"Tengeneza",my_status:"Status Yangu",status_ph:"Andika Status yako...",put_status:"Weka Status",call_sub:"Piga simu bure ndani ya SIRIAN",voice_call:"Piga Sauti",video_call:"Piga Video",type_msg:"Andika ujumbe...",send:"Tuma",back:"← Rudi",logout:"Toka / Badilisha Namba",users:"Watumiaji",app_name:"Jina la App",back_app:"Rudi Kwenye App",search_ph:"Tafuta mtu / Search...",search_contact_ph:"Tafuta kwa jina au namba...",find_by_number:"🔎 Mtafute Mtu kwa Namba Yake",find_hint:"Andika namba ya mtu aliyejiunga na SIRIAN, mfano +255 7XX XXX XXX",search_btn:"TAFUTA MTU",new_contact:"New Contact",new_contact_sub:"Weka jina na namba mpya",new_group:"New Group",new_group_sub:"Tengeneza Group mpya",contacts_on_sirian:"Watu walioko kwenye SIRIAN",save_contact:"HIFADHI NA CHAT",contact_name_ph:"Jina la mtu..."},
+en:{welcome_sub:"Choose language / Chagua lugha",phone_label:"Phone Number",send_code:"Send Code",code_label:"Verification Code",enter_btn:"ENTER SIRIAN →",code_is:"Your login code is",terms:"By continuing you agree to SIRIAN Terms.<br>Your name will never change.",chats:"Chats",groups:"Groups",status:"Status",calls:"Calls",new_friend:"New friend name...",new_btn:"+ New",my_groups:"My Groups",group_sub:"Create a Group, invite friends",group_name:"Group Name...",create:"Create",my_status:"My Status",status_ph:"Write your Status...",put_status:"Post Status",call_sub:"Call for free inside SIRIAN",voice_call:"Voice Call",video_call:"Video Call",type_msg:"Type a message...",send:"Send",back:"← Back",logout:"Logout / Change Number",users:"Users",app_name:"App Name",back_app:"Back to App",search_ph:"Search person...",search_contact_ph:"Search by name or number...",find_by_number:"🔎 Find Person by Number",find_hint:"Enter number of a person who joined SIRIAN, e.g. +255 7XX XXX XXX",search_btn:"SEARCH PERSON",new_contact:"New Contact",new_contact_sub:"Add name and new number",new_group:"New Group",new_group_sub:"Create new Group",contacts_on_sirian:"People on SIRIAN",save_contact:"SAVE AND CHAT",contact_name_ph:"Person name..."}
 };
 let curLang = localStorage.getItem('sirian_lang')||'sw';
 function setLang(l){
   curLang=l; localStorage.setItem('sirian_lang',l);
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    let k=el.getAttribute('data-i18n');
-    if(LANG[l][k]) el.innerHTML=LANG[l][k];
-  });
-  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
-    let k=el.getAttribute('data-i18n-ph');
-    if(LANG[l][k]) el.placeholder=LANG[l][k];
-  });
-  ['btn-sw','btn-en','btn-sw2','btn-en2'].forEach(id=>{
-    let b=document.getElementById(id); if(!b) return;
-    b.classList.remove('active');
-  });
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ let k=el.getAttribute('data-i18n'); if(LANG[l][k]) el.innerHTML=LANG[l][k]; });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{ let k=el.getAttribute('data-i18n-ph'); if(LANG[l][k]) el.placeholder=LANG[l][k]; });
+  ['btn-sw','btn-en','btn-sw2','btn-en2'].forEach(id=>{ let b=document.getElementById(id); if(b) b.classList.remove('active'); });
   if(l==='sw'){ document.getElementById('btn-sw').classList.add('active'); document.getElementById('btn-sw2').classList.add('active'); }
   else{ document.getElementById('btn-en').classList.add('active'); document.getElementById('btn-en2').classList.add('active'); }
-  renderChats(); renderGroups(); renderStatus();
+  renderChats(); renderGroups(); renderStatus(); renderContactList();
 }
+// WATU WALIOJIUNGA - DEMO + WALIOHIFADHIWA
+let demoContacts = [
+  {name:"Andrew Bug", phone:"+255 765 123 456", onSirian:true},
+  {name:"Grace", phone:"+255 754 111 222", onSirian:true},
+  {name:"Siriana", phone:"+255 759 999 888", onSirian:true},
+  {name:"Abby", phone:"+255 712 345 678", onSirian:true},
+  {name:"Abel ALFAKAD", phone:"+255 767 222 333", onSirian:true}
+];
 let chats = JSON.parse(localStorage.getItem('sirian_chats')||'[]');
 let groups = JSON.parse(localStorage.getItem('sirian_groups')||'[]');
 let statuses = JSON.parse(localStorage.getItem('sirian_status')||'[]');
+let savedContacts = JSON.parse(localStorage.getItem('sirian_contacts')||'[]');
 let currentChat = null;
 let myPhone = localStorage.getItem('sirian_phone')||'';
+function allContacts(){
+  let map = {};
+  demoContacts.forEach(c=> map[c.phone]=c);
+  savedContacts.forEach(c=> map[c.phone]=c);
+  chats.forEach(c=>{ if(c.phone) map[c.phone]={name:c.name, phone:c.phone, onSirian:true}; });
+  return Object.values(map).sort((a,b)=>a.name.localeCompare(b.name));
+}
 if(window.location.hash === '#mmiliki'){
   document.getElementById('page-login').classList.remove('active');
   document.getElementById('page-main').classList.remove('active');
@@ -196,6 +218,9 @@ function sendCode(){
 function doLogin(){
   let p = document.getElementById('phone').value.trim() || localStorage.getItem('sirian_phone_temp') || '+255 ';
   localStorage.setItem('sirian_phone', p);
+  // Jiunge kama mtu wa SIRIAN
+  let exists = savedContacts.find(c=>c.phone===p);
+  if(!exists){ savedContacts.push({name:curLang==='sw'?'Mimi (Wewe)':'Me (You)', phone:p, onSirian:true}); localStorage.setItem('sirian_contacts', JSON.stringify(savedContacts)); }
   document.getElementById('page-login').classList.remove('active');
   document.getElementById('page-main').classList.add('active');
   renderAll();
@@ -210,26 +235,33 @@ function showTab(t){
   document.getElementById('tab-'+t+'-div').classList.remove('hidden');
   document.getElementById('tab-'+t).classList.add('active');
 }
-function renderAll(){ renderChats(); renderGroups(); renderStatus(); updateStats(); }
+function renderAll(){ renderChats(); renderGroups(); renderStatus(); updateStats(); renderContactList(); }
 function updateStats(){
-  document.getElementById('statUsers').innerText = 1 + chats.length;
+  document.getElementById('statUsers').innerText = 1 + allContacts().length;
   document.getElementById('statChats').innerText = chats.length;
   document.getElementById('statGroups').innerText = groups.length;
 }
+function normPhone(p){ return (p||'').replace(/[\s\-]/g,'').replace(/^0/,'+255'); }
+// --- SEARCH CHATS KAMA WHATSAPP ---
+function filterChats(){ renderChats(); }
 function addChat(){
-  let n = document.getElementById('newName').value.trim();
-  if(!n) return alert(curLang==='sw'?'Andika jina kwanza':'Write a name first');
-  chats.unshift({name:n, msgs:[{t:curLang==='sw'?'Karibu SIRIAN! 👋':'Welcome to SIRIAN! 👋', me:false}]});
+  let n = document.getElementById('newName') ? document.getElementById('newName').value.trim() : '';
+  if(!n) return openContacts();
+  chats.unshift({name:n, phone:'', msgs:[{t:curLang==='sw'?'Karibu SIRIAN! 👋':'Welcome to SIRIAN! 👋', me:false}]});
   localStorage.setItem('sirian_chats', JSON.stringify(chats));
-  document.getElementById('newName').value='';
   renderChats(); updateStats();
 }
 function renderChats(){
   let el = document.getElementById('chatList');
-  if(chats.length===0){ el.innerHTML=`<div class="card"><p class="small">${curLang==='sw'?'Huna Chats bado. Andika jina la rafiki juu uanze ku-chat!':'No Chats yet. Write a friend name above to start chatting!'}</p></div>`; return; }
-  el.innerHTML = chats.map((c,i)=>`<div class="chat-item" onclick="openChat(${i})"><div class="avatar">${c.name.charAt(0).toUpperCase()}</div><div style="flex:1"><b>${c.name}</b><br><span style="color:#8696a0;font-size:13px">${c.msgs[c.msgs.length-1]?.t||''}</span></div><span class="badge">SIRIAN</span></div>`).join('');
+  let q = (document.getElementById('searchInput')?.value||'').toLowerCase();
+  let list = chats.filter(c=> c.name.toLowerCase().includes(q) || (c.phone||'').includes(q));
+  if(list.length===0){ el.innerHTML=`<div class="card"><p class="small">${q ? (curLang==='sw'?'Hakuna mtu aliyepatikana kwa "'+q+'"':'No person found for "'+q+'"') : (curLang==='sw'?'Huna Chats bado. Bonyeza + chini kuongeza mtu!':'No Chats yet. Tap + below to add someone!')}</p></div>`; return; }
+  el.innerHTML = list.map(c=>{
+    let idx = chats.indexOf(c);
+    return `<div class="chat-item" onclick="openChat(${idx})"><div class="avatar">${c.name.charAt(0).toUpperCase()}</div><div style="flex:1"><b>${c.name}</b><br><span style="color:#8696a0;font-size:13px">${c.phone||''} • ${c.msgs[c.msgs.length-1]?.t||''}</span></div><span class="badge">SIRIAN</span></div>`;
+  }).join('');
 }
-function openChat(i){ currentChat=i; document.getElementById('chatTitle').innerText = '💬 '+chats[i].name; document.getElementById('chatWindow').classList.remove('hidden'); renderMsgs(); }
+function openChat(i){ currentChat=i; document.getElementById('chatTitle').innerText = '💬 '+chats[i].name + (chats[i].phone ? ' ('+chats[i].phone+')' : ''); document.getElementById('chatWindow').classList.remove('hidden'); renderMsgs(); }
 function closeChat(){ document.getElementById('chatWindow').classList.add('hidden'); }
 function renderMsgs(){ document.getElementById('messages').innerHTML = chats[currentChat].msgs.map(m=>`<div class="msg ${m.me?'me':''}">${m.t}</div>`).join(''); }
 function sendMsg(){
@@ -238,6 +270,57 @@ function sendMsg(){
   localStorage.setItem('sirian_chats', JSON.stringify(chats));
   inp.value=''; renderMsgs(); renderChats();
   setTimeout(()=>{ chats[currentChat].msgs.push({t:curLang==='sw'?'Sawa, nimepokea! 👍':'Okay, received! 👍', me:false}); localStorage.setItem('sirian_chats', JSON.stringify(chats)); renderMsgs(); renderChats(); }, 1000);
+}
+// --- CONTACTS MODAL KAMA WHATSAPP + ---
+function openContacts(){
+  document.getElementById('contactModal').classList.add('open');
+  document.getElementById('modalTitle').innerText = curLang==='sw'?'Chagua Mtu':'Select Contact';
+  document.getElementById('modalCount').innerText = allContacts().length + (curLang==='sw'?' watu':' contacts');
+  renderContactList();
+}
+function closeContacts(){ document.getElementById('contactModal').classList.remove('open'); document.getElementById('addContactForm').classList.add('hidden'); }
+function renderContactList(){
+  let q = (document.getElementById('contactSearch')?.value||'').toLowerCase();
+  let list = allContacts().filter(c=> c.name.toLowerCase().includes(q) || c.phone.includes(q));
+  let el = document.getElementById('contactList');
+  if(list.length===0){ el.innerHTML=`<p class="small">${curLang==='sw'?'Hakuna mtu. Jaribu namba nyingine au mwalike.':'No person. Try another number or invite them.'}</p>`; return; }
+  el.innerHTML = list.map(c=>`<div class="contact-row" onclick="startChatWith('${c.phone.replace(/'/g,'')}','${c.name.replace(/'/g,'')}')"><div class="avatar">${c.name.charAt(0).toUpperCase()}</div><div style="flex:1"><b>${c.name}</b><br><span style="color:#8696a0;font-size:13px">${c.phone}</span></div><span class="badge">${curLang==='sw'?'Yupo':'On SIRIAN'}</span></div>`).join('');
+}
+function startChatWith(phone, name){
+  let idx = chats.findIndex(c=>c.phone===phone);
+  if(idx===-1){ chats.unshift({name:name, phone:phone, msgs:[{t:curLang==='sw'?'Karibu SIRIAN! 👋':'Welcome to SIRIAN! 👋', me:false}]}); localStorage.setItem('sirian_chats', JSON.stringify(chats)); idx=0; }
+  closeContacts(); showTab('chats'); renderChats(); updateStats(); openChat(idx);
+}
+function findByNumber(){
+  let raw = document.getElementById('findNumber').value.trim();
+  let res = document.getElementById('findResult');
+  if(raw.length < 9){ res.innerHTML=`<p class="small" style="color:#ffcc00">${curLang==='sw'?'Andika namba kamili kwanza':'Enter full number first'}</p>`; return; }
+  let n = normPhone(raw);
+  let found = allContacts().find(c=> normPhone(c.phone)===n);
+  if(found){
+    res.innerHTML=`<div class="card" style="background:#005c4b"><b>✅ ${found.name} ${curLang==='sw'?'YUPO kwenye SIRIAN':'IS ON SIRIAN'}</b><br>${found.phone}<br><button class="btn" onclick="startChatWith('${found.phone}','${found.name}')">${curLang==='sw'?'💬 ANZA KU-CHAT':'💬 START CHAT'}</button></div>`;
+  } else {
+    let link = 'https://andrewbugal4-rgb.github.io/Hi/hi.html';
+    res.innerHTML=`<div class="card"><b>❌ ${curLang==='sw'?'Huyu mtu bado hajasajiliwa kwenye SIRIAN':'This person is not yet on SIRIAN'}</b><br><span class="small">${n}</span><br><p class="small">${curLang==='sw'?'Mwalike ajiunge:':'Invite them to join:'}</p><button class="btn btn2" onclick="navigator.clipboard.writeText('${link}'); alert('${curLang==='sw'?'Link imekopiwa! Mtumie':'Link copied! Send it'}')">${curLang==='sw'?'📋 Copy Link ya SIRIAN':'📋 Copy SIRIAN Link'}</button><button class="btn" onclick="saveNewContactQuick('${n}')">${curLang==='sw'?'➕ MHIFADHI KAMA CONTACT':'➕ SAVE AS CONTACT'}</button></div>`;
+  }
+}
+function showAddContact(){ document.getElementById('addContactForm').classList.remove('hidden'); document.getElementById('newContactName').focus(); }
+function showAddGroupFromContacts(){ closeContacts(); showTab('groups'); alert(curLang==='sw'?'Andika jina la Group juu uunda':'Write Group name above to create'); }
+function saveNewContact(){
+  let name=document.getElementById('newContactName').value.trim();
+  let phone=document.getElementById('newContactPhone').value.trim();
+  if(!name||phone.length<9) return alert(curLang==='sw'?'Weka jina na namba sahihi':'Enter correct name and number');
+  let p = normPhone(phone);
+  savedContacts.push({name:name, phone:p, onSirian:true});
+  localStorage.setItem('sirian_contacts', JSON.stringify(savedContacts));
+  document.getElementById('newContactName').value=''; document.getElementById('newContactPhone').value='';
+  startChatWith(p, name);
+}
+function saveNewContactQuick(phone){
+  let name = prompt(curLang==='sw'?'Jina la huyu mtu ni nani?':'What is this person name?')||phone;
+  savedContacts.push({name:name, phone:phone, onSirian:false});
+  localStorage.setItem('sirian_contacts', JSON.stringify(savedContacts));
+  startChatWith(phone, name);
 }
 function addGroup(){
   let n=document.getElementById('groupName').value.trim(); if(!n) return alert(curLang==='sw'?'Andika jina la Group':'Write Group name');
