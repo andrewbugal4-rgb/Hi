@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>HI</title>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<style>
+/* ===== RANGI MCHANGANYIKO - BLUE + PURPLE + PINK ===== */
+:root{--blue:#1a73e8;--purple:#8b5cf6;--pink:#ec4899;--teal:#06b6d4;--grad:linear-gradient(135deg,#1a73e8,#8b5cf6,#ec4899);--grad2:linear-gradient(135deg,#8b5cf6,#ec4899);--dark:#0b0a1a;--card:#17142e;--card2:#221d45;--text:#fff;--gray:#a5a3c7}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--dark);color:var(--text);max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:78px}
+header{padding:14px 16px 8px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--dark);z-index:5}
+header h1{font-size:30px;font-weight:900;letter-spacing:1px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+header .icons{font-size:22px;cursor:pointer}
+.search{margin:6px 16px 12px;background:var(--card);border:1px solid #2a2450;border-radius:25px;padding:11px 14px;display:flex;gap:10px;color:var(--gray)}
+.search input{background:none;border:none;outline:none;color:#fff;font-size:15px;width:100%}
+.filters{display:flex;gap:8px;overflow-x:auto;padding:0 16px 12px;white-space:nowrap;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.pill{background:var(--card);padding:8px 14px;border-radius:20px;font-size:13px;color:var(--gray);cursor:pointer;border:1px solid #2a2450}
+.pill.on{background:var(--grad);color:#fff;font-weight:700;border:none}
+.chat{display:flex;gap:12px;padding:12px 16px;cursor:pointer;border-radius:12px}
+.chat:active{background:var(--card)}
+.chat img{width:54px;height:54px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--purple)}
+.chat .mid{flex:1;min-width:0}
+.chat .row{display:flex;justify-content:space-between;align-items:center}
+.chat b{font-size:16px;font-weight:600}
+.chat .time{font-size:12px;color:var(--pink);white-space:nowrap}
+.chat .time.gray{color:var(--gray)}
+.chat p{font-size:13.5px;color:var(--gray);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+.badge{background:var(--grad2);color:#fff;font-size:11px;font-weight:800;padding:4px 8px;border-radius:20px;min-width:23px;text-align:center}
+.page{display:none}.page.active{display:block}
+.sec{padding:10px 16px}
+.topbtns{display:flex;justify-content:space-between;padding:6px 22px 18px;text-align:center}
+.topbtns div{cursor:pointer}
+.circle{width:62px;height:62px;background:var(--grad);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 6px;box-shadow:0 4px 20px rgba(139,92,246,.5)}
+.topbtns p{font-size:12px;color:var(--gray)}
+h3{font-size:18px;margin:8px 0 4px;font-weight:600}
+.callrow{display:flex;gap:12px;padding:12px 16px;align-items:center;cursor:pointer}
+.callrow img{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--teal)}
+.callrow b{font-size:15px}.callrow p{font-size:13px;color:var(--gray)}.callrow .ic{margin-left:auto;font-size:22px}
+.status-head{display:flex;justify-content:space-between;align-items:center;padding:4px 16px}
+.add-status{display:flex;gap:14px;padding:16px;align-items:center;cursor:pointer}
+.add-status img{width:60px;height:60px;border-radius:50%;object-fit:cover;border:3px solid var(--pink);padding:2px}
+.add-status b{font-size:16px}.add-status p{font-size:13px;color:var(--gray)}
+.btns{display:flex;gap:10px;padding:0 16px}
+.btns button{flex:1;background:none;border:1px solid var(--purple);color:var(--purple);padding:11px;border-radius:25px;font-size:14px;cursor:pointer;font-weight:700}
+.channel{display:flex;gap:12px;padding:14px 16px;align-items:center;cursor:pointer}
+.channel img{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid var(--blue)}
+.tool-cards{display:flex;gap:10px;padding:12px 16px}
+.tool-card{flex:1;background:var(--card);border:1px solid #2a2450;border-radius:16px;padding:14px}
+.tool-card b{font-size:22px;display:block;margin:14px 0 4px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.tool-card p{font-size:12px;color:var(--gray)}
+.tool-item{display:flex;gap:14px;padding:16px;align-items:center;cursor:pointer}
+.tool-item b{font-size:16px}.tool-item p{font-size:13px;color:var(--gray)}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#0f0d24;border-top:1px solid #2a2450;display:flex;justify-content:space-around;padding:8px 0 12px;z-index:10}
+nav button{background:none;border:none;color:var(--gray);font-size:13px;cursor:pointer;padding:6px 16px;border-radius:20px}
+nav button.on{background:var(--grad);color:#fff}
+nav button .ico{font-size:22px;display:block}
+nav .dot{position:relative}
+nav .dot::after{content:"4";position:absolute;top:-4px;right:2px;background:var(--pink);color:#fff;font-size:10px;font-weight:800;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.fab{position:fixed;bottom:88px;right:calc(50% - 225px);background:var(--grad);color:#fff;width:54px;height:54px;border-radius:16px;font-size:26px;border:none;z-index:9;cursor:pointer;box-shadow:0 6px 20px rgba(236,72,153,.5)}
+@media(max-width:480px){.fab{right:16px}}
+#chatView{position:fixed;inset:0;background:var(--dark);z-index:20;display:none;flex-direction:column;max-width:480px;margin:0 auto}
+#chatView.open{display:flex}
+.chat-head{background:var(--grad);padding:10px;display:flex;align-items:center;gap:10px}
+.chat-head img{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #fff}
+.msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:82%;padding:9px 11px;border-radius:14px;font-size:14px;line-height:1.4;word-break:break-word}
+.msg.in{background:var(--card);align-self:flex-start;border-bottom-left-radius:4px}
+.msg.out{background:var(--grad);align-self:flex-end;border-bottom-right-radius:4px}
+.msg small{display:block;text-align:right;font-size:10px;color:#e9d5ff;margin-top:4px}
+.msg .reply{border-left:3px solid #fff;background:rgba(0,0,0,.25);padding:6px 8px;border-radius:6px;font-size:12px;margin-bottom:6px}
+.date-pill{align-self:center;background:var(--card);color:var(--gray);font-size:12px;padding:6px 12px;border-radius:8px;margin:8px 0}
+.input{display:flex;gap:8px;padding:8px;background:var(--dark);align-items:center}
+.input input{flex:1;padding:12px 14px;border-radius:25px;border:none;background:var(--card);color:#fff;outline:none}
+.send{width:46px;height:46px;border-radius:50%;background:var(--grad);border:none;font-size:20px;cursor:pointer;flex-shrink:0;color:#fff}
+.iconbtn{background:var(--card);border:none;color:#fff;width:42px;height:42px;border-radius:50%;font-size:18px;cursor:pointer;flex-shrink:0}
+.menu{position:fixed;top:56px;right:calc(50% - 230px);background:var(--card);border-radius:12px;padding:8px 0;width:210px;z-index:30;display:none;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.menu div{padding:13px 18px;cursor:pointer}.menu div:hover{background:var(--card2)}
+@media(max-width:480px){.menu{right:10px}}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:50;display:none;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}
+.box{background:var(--card);border-radius:16px;padding:20px;width:100%;max-width:360px;border:1px solid #2a2450}
+.box h2{font-size:20px;margin-bottom:10px}.box p{color:var(--gray);font-size:13px;line-height:1.5}
+.box input{width:100%;padding:13px;border-radius:12px;border:1px solid #3b3560;background:var(--card2);color:#fff;outline:none;margin:10px 0;font-size:15px}
+.box button{width:100%;padding:13px;border:none;border-radius:25px;background:var(--grad);color:#fff;font-weight:800;font-size:15px;cursor:pointer;margin-top:6px}
+.box .ghost{background:var(--card2);color:#fff}
+#callScreen{position:fixed;inset:0;background:#000;z-index:100;display:none;flex-direction:column;max-width:480px;margin:0 auto}
+#callScreen.open{display:flex}
+#remoteVideo{flex:1;width:100%;object-fit:cover;background:#111}
+#localVideo{position:absolute;top:70px;right:14px;width:120px;height:170px;object-fit:cover;border-radius:12px;border:2px solid #fff;background:#222;z-index:2}
+.call-top{position:absolute;top:0;left:0;right:0;padding:16px;text-align:center;background:linear-gradient(#000a,transparent);z-index:3}
+.call-top b{font-size:20px}.call-top p{color:#e9d5ff;font-size:13px}
+.call-controls{position:absolute;bottom:26px;left:0;right:0;display:flex;justify-content:center;gap:14px;z-index:3}
+.cbtn{width:58px;height:58px;border-radius:50%;border:none;font-size:24px;cursor:pointer}
+.cbtn.red{background:#ea0038;color:#fff}.cbtn.gray{background:#333;color:#fff}.cbtn.blue{background:var(--grad);color:#fff}
+.status-view{position:fixed;inset:0;background:#000;z-index:60;display:none;flex-direction:column;max-width:480px;margin:0 auto}
+.status-view.open{display:flex}.status-view img{flex:1;width:100%;object-fit:cover}
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:#fff;color:#000;padding:10px 16px;border-radius:20px;font-size:13px;z-index:200;display:none;white-space:nowrap}
+.sugg{display:flex;gap:6px;padding:6px 10px;overflow-x:auto}
+.sugg span{background:var(--card);padding:7px 12px;border-radius:20px;font-size:12px;white-space:nowrap;cursor:pointer;border:1px solid #2a2450}
+.voice{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:90;display:none;align-items:center;justify-content:center}
+.voice.open{display:flex}.voice .vbox{background:var(--card);padding:24px;border-radius:20px;text-align:center;width:280px}.voice .vbox .big{font-size:50px;margin:10px}.voice button{padding:12px 18px;border:none;border-radius:25px;background:#ea0038;color:#fff;font-weight:800;margin-top:12px;cursor:pointer;width:100%}
+</style>
+</head>
+<body>
+<header><h1>HI</h1><div class="icons"><span onclick="startCallPrompt(true)">📷</span> &nbsp; <span onclick="toggleMenu(event)">⋮</span></div></header>
+<div class="menu" id="menu">
+<div onclick="alert('Advertise - Karibu HI Ads')">Advertise</div>
+<div onclick="newChat()">New group</div>
+<div onclick="alert('Communities - Karibu!')">Communities</div>
+<div onclick="alert('Lists')">Lists</div>
+<div onclick="alert('Linked devices')">Linked devices</div>
+<div onclick="alert('Starred messages')">Starred</div>
+<div onclick="changeName()">Badilisha Jina Langu</div>
+<div onclick="alert('Settings - HI v2.0 Colorful')">Settings ●</div>
+</div>
+<div id="page-chats" class="page active">
+<div class="search">🔍 <input placeholder="Search..." oninput="filterChats(this.value)"></div>
+<div class="filters"><span class="pill on" onclick="setFilter(this,'all')">All</span><span class="pill" onclick="setFilter(this,'unread')">Unread</span><span class="pill" onclick="setFilter(this,'fav')">Favorites</span><span class="pill" onclick="setFilter(this,'group')">Groups</span></div>
+<div id="chatList"></div>
+<p style="text-align:center;color:var(--purple);font-size:12px;padding:10px">● HI COLORFUL • Chat, Call, Status - Kila kitu kinafanya kazi</p>
+</div>
+<div id="page-calls" class="page">
+<div class="sec"><h3 style="font-size:22px">Calls</h3><p style="color:var(--gray);font-size:13px">ID yako ya kupigiwa: <b id="myPeerId" style="color:var(--pink)">Inaunganisha...</b> <button onclick="copyId()" style="background:var(--grad);color:#fff;border:none;padding:5px 12px;border-radius:10px;font-weight:700">Copy</button></p><p style="color:var(--gray);font-size:12px;margin-top:6px">Mpe rafiki yako hii ID akupigie Video / Sauti</p></div>
+<div class="topbtns">
+<div onclick="startCallPrompt(false)"><div class="circle">📞</div><p>Call</p></div>
+<div onclick="startCallPrompt(true)"><div class="circle">📹</div><p>Video</p></div>
+<div onclick="showKeypad()"><div class="circle">🔢</div><p>Keypad</p></div>
+<div onclick="alert('Favorites')"><div class="circle">♡</div><p>Favorites</p></div>
+</div>
+<h3 style="padding:0 16px">Recent</h3>
+<div id="callList"></div>
+</div>
+<div id="page-updates" class="page">
+<div class="status-head"><h3 style="font-size:22px">Updates</h3><span>🔍 &nbsp; ⋮</span></div>
+<div class="status-head"><h3>Status</h3><span style="background:var(--card);padding:8px;border-radius:50%">🔒</span></div>
+<div class="add-status" onclick="addStatus()"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100"><div><b>Add status</b><p>Your day in one photo</p></div></div>
+<div class="btns"><button onclick="alert('Boost status')">📢 Boost status</button><button onclick="alert('Broadcast')">📣 Broadcast</button></div>
+<h3 style="padding:16px 16px 6px">Recent updates</h3>
+<div id="statusList"></div>
+<h3 style="padding:16px">Channels</h3>
+<div class="channel" onclick="openChannel('HI NEWS')"><img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=100"><div style="flex:1"><b>HI NEWS</b><p style="color:var(--gray);font-size:13px">🖼️ Photo</p></div><span style="color:var(--pink);font-size:13px">Yesterday<br><span class="badge" style="float:right;margin-top:4px">10</span></span></div>
+<div class="channel" onclick="openChannel('HI SPORTS')"><img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=100"><div style="flex:1"><b>HI SPORTS ✅</b><p style="color:var(--gray)">⚽⚽⚽</p></div><span style="color:var(--pink);font-size:13px">Yesterday<br><span class="badge" style="float:right;margin-top:4px">9</span></span></div>
+<div class="channel" onclick="openChannel('HI MEMES')"><img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=100"><div style="flex:1"><b>HI MEMES 🤣</b><p style="color:var(--gray)">🤣🤣🤣</p></div><span style="color:var(--pink);font-size:13px">Yesterday<br><span class="badge" style="float:right;margin-top:4px">10</span></span></div>
+</div>
+<div id="page-tools" class="page">
+<div class="sec"><h3 style="font-size:22px">Tools</h3><p style="color:var(--gray);font-size:14px;margin-top:8px">Last 7 days performance ⓘ</p></div>
+<div class="tool-cards">
+<div class="tool-card">💬<b id="statChats">9</b><p>Conversations started</p></div>
+<div class="tool-card">▦<b>—</b><p>Catalog views</p></div>
+<div class="tool-card">◎<b id="statStatus">0</b><p>Status views</p></div>
+</div>
+<h3 style="padding:14px 16px 0">For you</h3>
+<div style="margin:12px 16px;background:var(--card);border:1px solid #2a2450;border-radius:16px;padding:16px"><b>Draft Ad</b><p style="color:var(--gray);font-size:13px;margin:6px 0 12px">We've saved your ad progress so you can finish creating it.</p><button style="background:#fff;border:none;padding:10px 16px;border-radius:20px;font-weight:700" onclick="alert('Ad - Coming soon')">Continue creating ad</button></div>
+<h3 style="padding:6px 16px">Grow your business</h3>
+<div class="tool-item" onclick="alert('HI One')"><span style="font-size:24px">①</span><div><b>HI One</b><p>Unlock premium features</p></div></div>
+<div class="tool-item" onclick="alert('HI Business Agent')"><span style="font-size:24px">✦</span><div><b>HI Business Agent</b><p>Manage your AI agent</p></div><span style="margin-left:auto;width:12px;height:12px;background:var(--pink);border-radius:50%"></span></div>
+<div class="tool-item" onclick="alert('Catalog')"><span style="font-size:24px">▦</span><div><b>Catalog</b><p>Show products and services</p></div></div>
+<div class="tool-item" onclick="alert('Advertise')"><span style="font-size:24px">📢</span><div><b>Advertise</b><p>Create ads that lead to HI</p></div></div>
+</div>
+<button class="fab" onclick="newChat()">+</button>
+<nav>
+<button class="on" onclick="showPage('chats',this)"><span class="ico dot">💬</span>Chats</button>
+<button onclick="showPage('calls',this)"><span class="ico">📞</span>Calls</button>
+<button onclick="showPage('updates',this)"><span class="ico">◎</span>Updates</button>
+<button onclick="showPage('tools',this)"><span class="ico">🏪</span>Tools</button>
+</nav>
+<div id="chatView">
+<div class="chat-head"><button onclick="closeChat()" style="background:none;border:none;color:#fff;font-size:22px">←</button><img id="cvImg" src=""><div style="flex:1"><b id="cvName"></b><p style="font-size:11px;color:#e9d5ff" id="cvOnline">online</p><p style="font-size:11px;color:#e9d5ff" id="cvSub"></p></div><span style="font-size:22px;cursor:pointer" onclick="callFromChat(false)">📞</span> <span style="font-size:22px;cursor:pointer" onclick="callFromChat(true)">📹</span> <span style="cursor:pointer" onclick="alert('Info')">⋮</span></div>
+<div class="msgs" id="msgs"></div>
+<div class="sugg"><span onclick="quickSend('Sasa')">Sasa</span><span onclick="quickSend('Upo?')">Upo?</span><span onclick="quickSend('😍')">😍</span><span onclick="quickSend('🔥🔥')">🔥🔥</span><span onclick="quickSend('Sawa')">Sawa</span><span onclick="quickSend('Poa')">Poa</span></div>
+<div class="input"><button class="iconbtn" onclick="document.getElementById('fileInp').click()">📎</button><input id="fileInp" type="file" accept="image/*" style="display:none" onchange="sendImage(this)"><input id="inp" placeholder="Message"><button class="iconbtn" onclick="sendEmoji()">😊</button><button class="iconbtn" onclick="openVoice()">🎤</button><button class="send" onclick="sendMsg()">➤</button></div>
+</div>
+<div class="modal" id="nameModal"><div class="box"><h2>Karibu HI 💜</h2><p>Andika jina lako, watu wakuone uki-chat:</p><input id="nameInput" placeholder="Jina lako... mfano Andrew"><button onclick="saveName()">Ingia Kwenye HI →</button></div></div>
+<div class="modal" id="callModal"><div class="box"><h2 id="callModalTitle">📹 Video Call</h2><p>Andika ID ya mtu unayemtaka kumpigia. Mwambie akutumie ID yake kutoka kwenye Calls.</p><input id="callIdInput" placeholder="Andika ID ya rafiki..."><button onclick="doCall()">Piga Sasa 📞</button><button class="ghost" onclick="closeModal('callModal')">Ghairi</button><p style="margin-top:10px">ID yako: <b id="myId2" style="color:var(--pink)"></b></p></div></div>
+<div class="modal" id="keypadModal"><div class="box"><h2>🔢 Keypad</h2><input id="keypadInput" placeholder="ID / Namba..."><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0"><button class="ghost" onclick="key('1')">1</button><button class="ghost" onclick="key('2')">2</button><button class="ghost" onclick="key('3')">3</button><button class="ghost" onclick="key('4')">4</button><button class="ghost" onclick="key('5')">5</button><button class="ghost" onclick="key('6')">6</button><button class="ghost" onclick="key('7')">7</button><button class="ghost" onclick="key('8')">8</button><button class="ghost" onclick="key('9')">9</button><button class="ghost" onclick="key('*')">*</button><button class="ghost" onclick="key('0')">0</button><button class="ghost" onclick="key('#')">#</button></div><button onclick="callKeypad()">📞 Piga</button><button class="ghost" onclick="closeModal('keypadModal')">Funga</button></div></div>
+<div id="callScreen">
+<video id="remoteVideo" autoplay playsinline></video>
+<video id="localVideo" autoplay playsinline muted></video>
+<div class="call-top"><b id="callName">Video Call</b><p id="callTimer">00:00 • Inaunganisha...</p></div>
+<div class="call-controls">
+<button class="cbtn gray" id="muteBtn" onclick="toggleMute()">🎤</button>
+<button class="cbtn gray" id="camBtn" onclick="toggleCam()">📹</button>
+<button class="cbtn gray" onclick="switchCam()">🔄</button>
+<button class="cbtn red" onclick="endCall()">📞</button>
+</div>
+</div>
+<div class="status-view" id="statusView"><div style="display:flex;justify-content:space-between;padding:14px;background:#000"><b id="statusName"></b><button onclick="closeStatus()" style="background:none;border:none;color:#fff;font-size:22px">✕</button></div><img id="statusImg" src=""><p id="statusText" style="padding:14px;text-align:center"></p></div>
+<div class="voice" id="voiceBox"><div class="vbox"><p>🎤 Voice Message</p><div class="big">🔴 <span id="voiceTime">00:00</span></div><p style="color:var(--gray);font-size:13px">Inarekodi... Bonyeza Tuma</p><button onclick="sendVoice()">Tuma Voice ✅</button><button onclick="closeVoice()" style="background:#333">Ghairi</button></div></div>
+<div class="toast" id="toast"></div>
+<script>
+let myName = localStorage.getItem('hi_name') || '';
+let chats=[
+{name:"Grace",img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100",last:"Usk mwem",time:"02:47",unread:0,msgs:[{f:"Grace",t:"Usk mwem",time:"02:47"}]},
+{name:"Upara",img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100",last:"We dog",time:"02:41",unread:0,msgs:[{f:"Upara",t:"We dog",time:"02:41"}]},
+{name:"BEST FRIEND FOREVER",img:"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=100",last:"TATIZO NI MUDA 😭❤️",time:"Yesterday",unread:13,isGroup:true,msgs:[{f:"Tatizo",t:"TATIZO NI MUDA 😭❤️",time:"Yesterday"}]},
+{name:"ITIJI SEC CLASS OF 2022",img:"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=100",last:"~Bishop 🔥🔥 Sticker",time:"Yesterday",unread:59,isGroup:true,msgs:[{f:"Bishop",t:"🔥🔥🔥 Sticker",time:"Yesterday"}]},
+{name:"HI AI",img:"https://images.unsplash.com/photo-1677442136019-21780ecad995?w=100",last:"Karibu HI! Nikuulize nini?",time:"Yesterday",unread:0,msgs:[{f:"HI AI",t:"Karibu HI! Mimi ni msaidizi wako. Uliza chochote!",time:"Yesterday"}]},
+{name:"ZENJI HUB ONLINE",img:"https://images.unsplash.com/photo-1563986768609-322da13575f3?w=100",last:"🖼️ Photo",time:"Yesterday",unread:0,msgs:[{f:"ZENJI",t:"🖼️ Photo - Habari mpya!",time:"Yesterday"}]},
+{name:"Sirian💕💕",img:"https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100",last:"Nakupenda sana 😘",time:"Yesterday",unread:4,msgs:[{f:"Sirian",t:"Nakupenda sana 😘",time:"Yesterday"}]},
+];
+let calls=JSON.parse(localStorage.getItem('hi_calls')||'[]');
+if(calls.length===0){calls=[
+{name:"BABU PAROKO N°45",img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100",date:"November 17, 19:45",icon:"📞",color:"#ff8a8a"},
+{name:"Sirian💕💕 (2)",img:"https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100",date:"November 17, 17:04",icon:"📞",color:"#ff8a8a"},
+{name:"Sirian💕💕 (2)",img:"https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100",date:"November 17, 16:16",icon:"📹",color:"#8b5cf6"},
+{name:"Lisa Obby",img:"https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100",date:"November 17, 13:08",icon:"📹",color:"#ff8a8a"},
+];}
+let statuses=[
+{name:"Upara",img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200",text:"😂😂😂 - Status ya Upara",time:"Yesterday"},
+{name:"bh",img:"https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200",text:"Yesterday",time:"Yesterday"},
+{name:"You",img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200",text:"My Status",time:"Today"},
+];
+let current=0, filter='all', peer=null, myPeerId='', currentCall=null, localStream=null, callStart=0, callTimerInt=null, isVideo=true, muted=false, camOn=true, voiceStart=0, voiceInt=null, replyTo=null;
+function toast(m){let t=document.getElementById('toast');t.innerText=m;t.style.display='block';setTimeout(()=>t.style.display='none',2500)}
+function toggleMenu(e){e.stopPropagation();let m=document.getElementById('menu');m.style.display=m.style.display==='block'?'none':'block'}
+document.addEventListener('click',()=>document.getElementById('menu').style.display='none');
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function changeName(){let n=prompt("Jina lako jipya:",myName);if(n){myName=n;localStorage.setItem('hi_name',n);toast("Jina limebadilika: "+n)}}
+function saveName(){let v=document.getElementById('nameInput').value.trim();if(!v)return alert("Andika jina kwanza!");myName=v;localStorage.setItem('hi_name',v);closeModal('nameModal');toast("Karibu "+v+" 💜")}
+function setFilter(el,f){filter=f;document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));el.classList.add('on');renderChats()}
+function renderChats(list){
+let l=chats;
+if(filter==='unread')l=chats.filter(c=>c.unread>0);
+if(filter==='group')l=chats.filter(c=>c.isGroup);
+if(list)l=list;
+document.getElementById('chatList').innerHTML=l.map(c=>`<div class="chat" onclick="openChat(${chats.indexOf(c)})"><img src="${c.img}"><div class="mid"><div class="row"><b>${c.name}</b><span class="time ${c.unread?'':'gray'}">${c.time}</span></div><div class="row"><p>${c.last}</p>${c.unread?`<span class="badge">${c.unread}</span>`:''}</div></div></div>`).join('');
+document.getElementById('statChats').innerText=chats.length;
+}
+function filterChats(v){renderChats(chats.filter(c=>c.name.toLowerCase().includes(v.toLowerCase())))}
+function renderCalls(){
+document.getElementById('callList').innerHTML=calls.map(c=>`<div class="callrow" onclick="startCallPrompt(${c.icon==='📹'})"><img src="${c.img}"><div><b>${c.name}</b><p><span style="color:${c.color}">↙</span> ${c.date}</p></div><span class="ic">${c.icon}</span></div>`).join('');
+}
+function renderStatus(){document.getElementById('statusList').innerHTML=statuses.map((s,i)=>`<div class="channel" onclick="openStatus(${i})"><img src="${s.img}"><div><b>${s.name}</b><p style="color:var(--gray);font-size:13px">${s.time}</p></div></div>`).join('')}
+function showPage(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('on'));btn.classList.add('on')}
+function openChat(i){current=i;let c=chats[i];c.unread=0;document.getElementById('cvImg').src=c.img;document.getElementById('cvName').innerText=c.name;document.getElementById('cvSub').innerText=c.isGroup?c.msgs.length+" messages":"online";document.getElementById('cvOnline').innerText="online";document.getElementById('chatView').classList.add('open');renderMsgs();renderChats()}
+function closeChat(){document.getElementById('chatView').classList.remove('open')}
+function renderMsgs(){
+let c=chats[current];
+document.getElementById('msgs').innerHTML=c.msgs.map((m,idx)=>{
+if(m.type==='date') return `<div class="date-pill">${m.t}</div>`;
+if(m.img) return `<div class="msg ${m.f===myName||m.f==='Wewe'?'out':'in'}" ondblclick="replyMsg(${idx})"><img src="${m.img}" style="width:100%;border-radius:8px"><small>${m.time} ✓✓</small></div>`;
+if(m.voice) return `<div class="msg ${m.f===myName||m.f==='Wewe'?'out':'in'}">🎤 Voice (${m.voice}) <small>${m.time} ✓✓</small></div>`;
+let nameHtml=(m.f!==myName&&m.f!=='Wewe')?`<b style="color:#c4b5fd;font-size:12px">${m.f}</b>`:'';
+let replyHtml=m.reply?`<div class="reply"><b>${m.reply.from}</b>${m.reply.text}</div>`:'';
+return `<div class="msg ${m.f===myName||m.f==='Wewe'?'out':'in'}" ondblclick="replyMsg(${idx})">${replyHtml}${nameHtml}${m.t}<small>${m.time} ✓✓</small></div>`
+}).join('');
+let el=document.getElementById('msgs');el.scrollTop=el.scrollHeight;
+}
+function replyMsg(i){let m=chats[current].msgs[i];if(!m||!m.t)return;replyTo={from:m.f,text:m.t};toast("Replying: "+m.t.substring(0,20));document.getElementById('inp').placeholder="Replying to "+m.f+"...";document.getElementById('inp').focus()}
+function quickSend(t){document.getElementById('inp').value=t;sendMsg()}
+function sendMsg(){
+let inp=document.getElementById('inp');let t=inp.value.trim();if(!t)return;
+if(!myName){document.getElementById('nameModal').classList.add('open');return}
+let time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+let msg={f:myName,t:t,time:time};if(replyTo)msg.reply=replyTo;
+let c=chats[current];
+c.msgs.push(msg);c.last="Wewe: "+t;c.time=time;renderMsgs();renderChats();
+setTimeout(()=>{let r=["Sawa 💜","Poa sana","😍😍","Kweli?","🔥🔥 Kali"];let who=c.isGroup?"Asha":c.name;c.msgs.push({f:who,t:r[Math.floor(Math.random()*r.length)],time:time});renderMsgs();renderChats();},1200);
+inp.value='';inp.placeholder="Message";replyTo=null;
+}
+function sendEmoji(){let e=["😍","😭","🔥","💜","🤣","🙏","😘","👏"];document.getElementById('inp').value+=e[Math.floor(Math.random()*e.length)]}
+function sendImage(input){if(!input.files[0])return;let r=new FileReader();r.onload=()=>{let time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});chats[current].msgs.push({f:myName,img:r.result,time:time});chats[current].last="🖼️ Photo";renderMsgs();renderChats();};r.readAsDataURL(input.files[0])}
+function openVoice(){document.getElementById('voiceBox').classList.add('open');voiceStart=Date.now();voiceInt=setInterval(()=>{let s=Math.floor((Date.now()-voiceStart)/1000);document.getElementById('voiceTime').innerText="00:"+String(s).padStart(2,'0')},1000)}
+function closeVoice(){document.getElementById('voiceBox').classList.remove('open');clearInterval(voiceInt)}
+function sendVoice(){let s=Math.floor((Date.now()-voiceStart)/1000);closeVoice();let time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});chats[current].msgs.push({f:myName,voice:"0:"+String(s).padStart(2,'0'),time:time});chats[current].last="🎤 Voice";renderMsgs();renderChats();toast("Voice imetumwa ✅")}
+function newChat(){let n=prompt("Jina la mtu / Group mpya:");if(!n)return;chats.unshift({name:n,img:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100",last:"Sema hi!",time:"Sasa",unread:0,msgs:[{f:"System",t:"Chat mpya na "+n,time:"Sasa"}]});renderChats();openChat(0)}
+function openChannel(n){toast("Channel: "+n+" - Karibu!");chats.unshift({name:n,img:"https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=100",last:"Karibu channel!",time:"Sasa",unread:1,isGroup:true,msgs:[{f:"System",t:"Karibu "+n,time:"Sasa"}]});renderChats();showPage('chats',document.querySelector('nav button'));openChat(0)}
+function addStatus(){let t=prompt("Andika Status yako:");if(!t)return;statuses.unshift({name:myName||"Wewe",img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200",text:t,time:"Sasa hivi"});renderStatus();toast("Status imewekwa ✅")}
+function openStatus(i){let s=statuses[i];document.getElementById('statusName').innerText=s.name;document.getElementById('statusImg').src=s.img;document.getElementById('statusText').innerText=s.text||s.time;document.getElementById('statusView').classList.add('open');document.getElementById('statStatus').innerText=parseInt(document.getElementById('statStatus').innerText)+1}
+function closeStatus(){document.getElementById('statusView').classList.remove('open')}
+function showKeypad(){document.getElementById('keypadModal').classList.add('open')}
+function key(d){document.getElementById('keypadInput').value+=d}
+function callKeypad(){let v=document.getElementById('keypadInput').value;if(!v)return alert("Andika ID");closeModal('keypadModal');startCallById(v,true)}
+function copyId(){if(myPeerId){navigator.clipboard.writeText(myPeerId);toast("ID imecopy: "+myPeerId)}}
+function startCallPrompt(video){isVideo=video;document.getElementById('callModalTitle').innerText=video?"📹 Video Call":"📞 Voice Call";document.getElementById('myId2').innerText=myPeerId;document.getElementById('callModal').classList.add('open')}
+function callFromChat(video){closeChat();startCallPrompt(video)}
+function doCall(){let id=document.getElementById('callIdInput').value.trim();if(!id)return alert("Andika ID ya rafiki!");closeModal('callModal');startCallById(id,isVideo)}
+function startCallById(id,video){
+isVideo=video;if(!peer){toast("Bado inaunganisha... jaribu tena");return}
+navigator.mediaDevices.getUserMedia({video:video,audio:true}).then(stream=>{localStream=stream;document.getElementById('localVideo').srcObject=stream;let call=peer.call(id,stream);currentCall=call;setupCall(call,id,video)}).catch(()=>toast("Ruhusu Camera / Mic kwanza!"));
+}
+function setupCall(call,peerId,video){
+document.getElementById('callScreen').classList.add('open');
+document.getElementById('callName').innerText=(video?"📹 Video Call - ":"📞 Voice Call - ")+peerId;
+callStart=Date.now();callTimerInt=setInterval(()=>{let s=Math.floor((Date.now()-callStart)/1000);let m=String(Math.floor(s/60)).padStart(2,'0');let ss=String(s%60).padStart(2,'0');document.getElementById('callTimer').innerText=m+":"+ss+" • Inaendelea"},1000);
+call.on('stream',remote=>{document.getElementById('remoteVideo').srcObject=remote;document.getElementById('callTimer').innerText="Imeunganishwa ✅"});
+call.on('close',()=>endCall());
+}
+function endCall(){
+if(currentCall)currentCall.close();currentCall=null;
+if(localStream)localStream.getTracks().forEach(t=>t.stop());
+clearInterval(callTimerInt);document.getElementById('callScreen').classList.remove('open');
+calls.unshift({name:document.getElementById('callName').innerText,img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100",date:new Date().toLocaleString(),icon:isVideo?"📹":"📞",color:"#ec4899"});localStorage.setItem('hi_calls',JSON.stringify(calls));renderCalls();
+toast("Call imemalizika");
+}
+function toggleMute(){muted=!muted;if(localStream)localStream.getAudioTracks().forEach(t=>t.enabled=!muted);document.getElementById('muteBtn').innerText=muted?"🔇":"🎤";document.getElementById('muteBtn').style.background=muted?"#ea0038":"#333"}
+function toggleCam(){camOn=!camOn;if(localStream)localStream.getVideoTracks().forEach(t=>t.enabled=camOn);document.getElementById('camBtn').innerText=camOn?"📹":"📷";document.getElementById('camBtn').style.background=camOn?"#333":"#ea0038"}
+function switchCam(){toast("Camera imebadilishwa")}
+document.getElementById('inp').addEventListener('keypress',e=>{if(e.key==='Enter')sendMsg()});
+try{
+  peer=new Peer();
+  peer.on('open',id=>{myPeerId=id;document.getElementById('myPeerId').innerText=id});
+  peer.on('call',call=>{
+    let accept=confirm("📞 "+call.peer+" anakupigia Video / Sauti Call. Pokee?");
+    if(!accept){call.close();return}
+    navigator.mediaDevices.getUserMedia({video:true,audio:true}).then(stream=>{localStream=stream;document.getElementById('localVideo').srcObject=stream;call.answer(stream);currentCall=call;setupCall(call,call.peer,true)}).catch(()=>{navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{localStream=stream;call.answer(stream);currentCall=call;setupCall(call,call.peer,false)})});
+  });
+}catch(e){}
+if(!myName){setTimeout(()=>document.getElementById('nameModal').classList.add('open'),800)}
+renderChats();renderCalls();renderStatus();
+</script>
+</body>
+</html>
