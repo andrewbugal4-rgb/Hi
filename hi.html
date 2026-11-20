@@ -50,6 +50,12 @@ input,select{width:100%;padding:13px;margin:8px 0;border-radius:8px;border:1px s
 .setting-row{display:flex;justify-content:space-between;align-items:center;padding:14px;background:#202c33;border-radius:10px;margin-bottom:8px;cursor:pointer}
 .setting-row b{font-size:15px}
 .setting-row span{font-size:12px;color:#8696a0;display:block}
+.filter-box{display:flex;gap:6px;margin:10px 0}
+.filter-box button{flex:1;padding:9px;border:none;border-radius:20px;background:#202c33;color:white;cursor:pointer;font-size:13px}
+.filter-box button.active{background:#00a884}
+.sync-progress{background:#202c33;border-radius:10px;padding:12px;text-align:center;margin:10px 0}
+.bar{height:8px;background:#111b21;border-radius:10px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:#00a884;width:0%;transition:width .3s}
 </style>
 </head>
 <body>
@@ -84,9 +90,7 @@ input,select{width:100%;padding:13px;margin:8px 0;border-radius:8px;border:1px s
     <button id="tab-calls" onclick="showTab('calls')" data-i18n="calls">Calls</button>
     <button id="tab-settings" onclick="showTab('settings')" data-i18n="settings">⚙️ Settings</button>
   </div>
-  <div id="tab-chats-div">
-    <div id="chatList"></div>
-  </div>
+  <div id="tab-chats-div"><div id="chatList"></div></div>
   <div id="tab-groups-div" class="hidden">
     <div class="card"><h3 data-i18n="my_groups">Groups Zangu</h3><p class="small" data-i18n="group_sub">Tengeneza Group, waalike marafiki</p><div class="flex"><input id="groupName" data-i18n-ph="group_name" placeholder="Jina la Group..."><button class="btn" style="width:90px" onclick="addGroup()" data-i18n="create">Tengeneza</button></div></div>
     <div id="groupList"></div>
@@ -107,6 +111,14 @@ input,select{width:100%;padding:13px;margin:8px 0;border-radius:8px;border:1px s
         <button id="btn-sw2" onclick="setLang('sw')">🇹🇿 Kiswahili</button>
         <button id="btn-en2" onclick="setLang('en')">🇬🇧 English</button>
       </div>
+    </div>
+    <div class="card">
+      <h3>📱 <span data-i18n="contacts_sync_title">Contacts za Simu</span></h3>
+      <p class="small" style="text-align:left" data-i18n="contacts_sync_sub">SIRIAN itachambua namba za kwenye simu yako na kukuambia zipi zimesajiliwa SIRIAN - kama WhatsApp. Namba hazitumwi popote, zinabaki kwenye simu yako tu.</p>
+      <button class="btn" onclick="syncPhoneContacts()" data-i18n="sync_btn">🔄 SYNC CONTACTS ZA SIMU</button>
+      <button class="btn btn2" onclick="document.getElementById('vcfFile').click()" data-i18n="import_btn">📂 Chagua File ya Contacts (.vcf / .csv)</button>
+      <input type="file" id="vcfFile" accept=".vcf,.csv,.txt" style="display:none" onchange="importContactsFile(event)">
+      <div id="syncResult" style="margin-top:10px"></div>
     </div>
     <div class="card">
       <div class="setting-row" onclick="alert('Profile yako: SIRIAN User')"><div><b data-i18n="profile">Profile Yangu</b><span data-i18n="profile_sub">Jina, picha, kuhusu</span></div><span>›</span></div>
@@ -152,7 +164,19 @@ input,select{width:100%;padding:13px;margin:8px 0;border-radius:8px;border:1px s
       <button class="close-btn" onclick="closeContacts()">✕</button>
     </div>
     <div class="privacy">🔒 <b data-i18n="privacy_title">Faragha yako imelindwa</b><br><span data-i18n="privacy_text">Hatuonyeshi watu wote wa SIRIAN. Unaona tu watu ambao WEWE una namba zao. Ukimtafuta mtu kwa namba, tunakuambia tu kama yupo au hayupo.</span></div>
+    <!-- SYNC KAMA WHATSAPP -->
+    <div class="card" style="border:1px solid #00a884">
+      <b>📱 <span data-i18n="sync_title">Angalia Namba za Simu Yako</span></b>
+      <p class="small" style="text-align:left" data-i18n="sync_hint">Bonyeza hapa, SIRIAN itaomba ruhusa kuona Contacts za simu yako, halafu itachambua ni namba zipi zimesajiliwa SIRIAN.</p>
+      <button class="btn" onclick="syncPhoneContacts()" data-i18n="sync_btn2">🔄 ANGALIA CONTACTS ZANGU</button>
+      <div id="syncResult2"></div>
+    </div>
     <div class="search-box">🔍 <input id="contactSearch" oninput="renderContactList()" data-i18n-ph="search_contact_ph" placeholder="Tafuta kwa jina au namba..."></div>
+    <div class="filter-box">
+      <button id="filter-all" class="active" onclick="setContactFilter('all')" data-i18n="filter_all">Wote</button>
+      <button id="filter-on" onclick="setContactFilter('on')" data-i18n="filter_on">✅ Wapo SIRIAN</button>
+      <button id="filter-off" onclick="setContactFilter('off')" data-i18n="filter_off">❌ Hawapo</button>
+    </div>
     <div class="card" style="margin-bottom:12px">
       <b data-i18n="find_by_number">🔎 Mtafute Mtu kwa Namba Yake</b>
       <p class="small" style="text-align:left" data-i18n="find_hint">Andika namba mpya hapa. Tutakuambia kama namba hiyo ipo kwenye SIRIAN au haipo.</p>
@@ -181,10 +205,11 @@ input,select{width:100%;padding:13px;margin:8px 0;border-radius:8px;border:1px s
 
 <script>
 const LANG = {
-sw:{welcome_sub:"Chagua lugha / Choose language",phone_label:"Namba ya Simu",send_code:"Tuma Code",code_label:"Code ya Kuthibitisha",enter_btn:"INGIA KATIKA SIRIAN →",code_is:"Code ya kuingia ni",terms:"Kwa kuendelea unakubali Masharti ya SIRIAN.<br>Jina lako halitabadilika kamwe.",chats:"Chats",groups:"Groups",status:"Status",calls:"Calls",settings:"Settings",my_groups:"Groups Zangu",group_sub:"Tengeneza Group, waalike marafiki",group_name:"Jina la Group...",create:"Tengeneza",my_status:"Status Yangu",status_ph:"Andika Status yako...",put_status:"Weka Status",call_sub:"Piga simu bure ndani ya SIRIAN",voice_call:"Piga Sauti",video_call:"Piga Video",type_msg:"Andika ujumbe...",send:"Tuma",back:"← Rudi",logout:"Toka / Log Out",users:"Watumiaji",app_name:"Jina la App",back_app:"Rudi Kwenye App",search_ph:"Tafuta mtu / Search...",search_contact_ph:"Tafuta kwa jina au namba...",find_by_number:"🔎 Mtafute Mtu kwa Namba Yake",find_hint:"Andika namba mpya hapa. Tutakuambia kama namba hiyo ipo kwenye SIRIAN au haipo.",search_btn:"TAFUTA MTU",new_contact:"New Contact",new_contact_sub:"Weka jina na namba mpya",new_group:"New Group",new_group_sub:"Tengeneza Group mpya",my_contacts_title:"Watu Wangu - Niliowahifadhi",save_contact:"HIFADHI NA CHAT",contact_name_ph:"Jina la mtu...",privacy_title:"Faragha yako imelindwa",privacy_text:"Hatuonyeshi watu wote wa SIRIAN. Unaona tu watu ambao WEWE una namba zao. Ukimtafuta mtu kwa namba, tunakuambia tu kama yupo au hayupo.",my_number:"Namba Yangu:",lang_label:"Lugha / Language",profile:"Profile Yangu",profile_sub:"Jina, picha, kuhusu",privacy_set:"Faragha / Privacy",privacy_set_sub:"Nani akuone, nani akuandikie",notif:"Notifications",notif_sub:"Sauti, vibration",about:"Kuhusu SIRIAN",about_sub:"Version, msaada",account:"Akaunti",change_number:"Badilisha Namba",logout_note:"Ukishabofya Toka, utarudi kwenye ukurasa wa kuingia. Chats zako zitabaki."},
-en:{welcome_sub:"Choose language / Chagua lugha",phone_label:"Phone Number",send_code:"Send Code",code_label:"Verification Code",enter_btn:"ENTER SIRIAN →",code_is:"Your login code is",terms:"By continuing you agree to SIRIAN Terms.<br>Your name will never change.",chats:"Chats",groups:"Groups",status:"Status",calls:"Calls",settings:"Settings",my_groups:"My Groups",group_sub:"Create a Group, invite friends",group_name:"Group Name...",create:"Create",my_status:"My Status",status_ph:"Write your Status...",put_status:"Post Status",call_sub:"Call for free inside SIRIAN",voice_call:"Voice Call",video_call:"Video Call",type_msg:"Type a message...",send:"Send",back:"← Back",logout:"Log Out",users:"Users",app_name:"App Name",back_app:"Back to App",search_ph:"Search person...",search_contact_ph:"Search by name or number...",find_by_number:"🔎 Find Person by Number",find_hint:"Enter a new number here. We will tell you if that number is on SIRIAN or not.",search_btn:"SEARCH PERSON",new_contact:"New Contact",new_contact_sub:"Add name and new number",new_group:"New Group",new_group_sub:"Create new Group",my_contacts_title:"My People - I Saved",save_contact:"SAVE AND CHAT",contact_name_ph:"Person name...",privacy_title:"Your privacy is protected",privacy_text:"We do NOT show all SIRIAN users. You only see people YOU have their numbers. When you search by number, we only tell you if they are on SIRIAN or not.",my_number:"My Number:",lang_label:"Language / Lugha",profile:"My Profile",profile_sub:"Name, photo, about",privacy_set:"Privacy",privacy_set_sub:"Who can see you, who can message you",notif:"Notifications",notif_sub:"Sound, vibration",about:"About SIRIAN",about_sub:"Version, help",account:"Account",change_number:"Change Number",logout_note:"If you tap Log Out, you will go back to login. Your chats will remain."}
+sw:{welcome_sub:"Chagua lugha / Choose language",phone_label:"Namba ya Simu",send_code:"Tuma Code",code_label:"Code ya Kuthibitisha",enter_btn:"INGIA KATIKA SIRIAN →",code_is:"Code ya kuingia ni",terms:"Kwa kuendelea unakubali Masharti ya SIRIAN.<br>Jina lako halitabadilika kamwe.",chats:"Chats",groups:"Groups",status:"Status",calls:"Calls",settings:"Settings",my_groups:"Groups Zangu",group_sub:"Tengeneza Group, waalike marafiki",group_name:"Jina la Group...",create:"Tengeneza",my_status:"Status Yangu",status_ph:"Andika Status yako...",put_status:"Weka Status",call_sub:"Piga simu bure ndani ya SIRIAN",voice_call:"Piga Sauti",video_call:"Piga Video",type_msg:"Andika ujumbe...",send:"Tuma",back:"← Rudi",logout:"Toka / Log Out",users:"Watumiaji",app_name:"Jina la App",back_app:"Rudi Kwenye App",search_ph:"Tafuta mtu / Search...",search_contact_ph:"Tafuta kwa jina au namba...",find_by_number:"🔎 Mtafute Mtu kwa Namba Yake",find_hint:"Andika namba mpya hapa. Tutakuambia kama namba hiyo ipo kwenye SIRIAN au haipo.",search_btn:"TAFUTA MTU",new_contact:"New Contact",new_contact_sub:"Weka jina na namba mpya",new_group:"New Group",new_group_sub:"Tengeneza Group mpya",my_contacts_title:"Watu Wangu - Niliowahifadhi",save_contact:"HIFADHI NA CHAT",contact_name_ph:"Jina la mtu...",privacy_title:"Faragha yako imelindwa",privacy_text:"Hatuonyeshi watu wote wa SIRIAN. Unaona tu watu ambao WEWE una namba zao. Ukimtafuta mtu kwa namba, tunakuambia tu kama yupo au hayupo.",my_number:"Namba Yangu:",lang_label:"Lugha / Language",profile:"Profile Yangu",profile_sub:"Jina, picha, kuhusu",privacy_set:"Faragha / Privacy",privacy_set_sub:"Nani akuone, nani akuandikie",notif:"Notifications",notif_sub:"Sauti, vibration",about:"Kuhusu SIRIAN",about_sub:"Version, msaada",account:"Akaunti",change_number:"Badilisha Namba",logout_note:"Ukishabofya Toka, utarudi kwenye ukurasa wa kuingia. Chats zako zitabaki.",contacts_sync_title:"Contacts za Simu",contacts_sync_sub:"SIRIAN itachambua namba za kwenye simu yako na kukuambia zipi zimesajiliwa SIRIAN - kama WhatsApp. Namba hazitumwi popote, zinabaki kwenye simu yako tu.",sync_btn:"🔄 SYNC CONTACTS ZA SIMU",sync_btn2:"🔄 ANGALIA CONTACTS ZANGU",import_btn:"📂 Chagua File ya Contacts (.vcf / .csv)",sync_title:"Angalia Namba za Simu Yako",sync_hint:"Bonyeza hapa, SIRIAN itaomba ruhusa kuona Contacts za simu yako, halafu itachambua ni namba zipi zimesajiliwa SIRIAN.",filter_all:"Wote",filter_on:"✅ Wapo SIRIAN",filter_off:"❌ Hawapo"},
+en:{welcome_sub:"Choose language / Chagua lugha",phone_label:"Phone Number",send_code:"Send Code",code_label:"Verification Code",enter_btn:"ENTER SIRIAN →",code_is:"Your login code is",terms:"By continuing you agree to SIRIAN Terms.<br>Your name will never change.",chats:"Chats",groups:"Groups",status:"Status",calls:"Calls",settings:"Settings",my_groups:"My Groups",group_sub:"Create a Group, invite friends",group_name:"Group Name...",create:"Create",my_status:"My Status",status_ph:"Write your Status...",put_status:"Post Status",call_sub:"Call for free inside SIRIAN",voice_call:"Voice Call",video_call:"Video Call",type_msg:"Type a message...",send:"Send",back:"← Back",logout:"Log Out",users:"Users",app_name:"App Name",back_app:"Back to App",search_ph:"Search person...",search_contact_ph:"Search by name or number...",find_by_number:"🔎 Find Person by Number",find_hint:"Enter a new number here. We will tell you if that number is on SIRIAN or not.",search_btn:"SEARCH PERSON",new_contact:"New Contact",new_contact_sub:"Add name and new number",new_group:"New Group",new_group_sub:"Create new Group",my_contacts_title:"My People - I Saved",save_contact:"SAVE AND CHAT",contact_name_ph:"Person name...",privacy_title:"Your privacy is protected",privacy_text:"We do NOT show all SIRIAN users. You only see people YOU have their numbers. When you search by number, we only tell you if they are on SIRIAN or not.",my_number:"My Number:",lang_label:"Language / Lugha",profile:"My Profile",profile_sub:"Name, photo, about",privacy_set:"Privacy",privacy_set_sub:"Who can see you, who can message you",notif:"Notifications",notif_sub:"Sound, vibration",about:"About SIRIAN",about_sub:"Version, help",account:"Account",change_number:"Change Number",logout_note:"If you tap Log Out, you will go back to login. Your chats will remain.",contacts_sync_title:"Phone Contacts",contacts_sync_sub:"SIRIAN will check numbers on your phone and tell you which are registered on SIRIAN - like WhatsApp. Numbers are not sent anywhere, they stay on your phone only.",sync_btn:"🔄 SYNC PHONE CONTACTS",sync_btn2:"🔄 CHECK MY CONTACTS",import_btn:"📂 Choose Contacts File (.vcf / .csv)",sync_title:"Check Your Phone Numbers",sync_hint:"Tap here, SIRIAN will ask permission to see your phone Contacts, then check which numbers are registered on SIRIAN.",filter_all:"All",filter_on:"✅ On SIRIAN",filter_off:"❌ Not on SIRIAN"}
 };
 let curLang = localStorage.getItem('sirian_lang')||'sw';
+let contactFilter = 'all';
 function setLang(l){
   curLang=l; localStorage.setItem('sirian_lang',l);
   document.querySelectorAll('[data-i18n]').forEach(el=>{ let k=el.getAttribute('data-i18n'); if(LANG[l][k]) el.innerHTML=LANG[l][k]; });
@@ -195,6 +220,7 @@ function setLang(l){
   renderChats(); renderGroups(); renderStatus(); renderContactList();
 }
 const SIRIAN_PRIVATE_REGISTRY = ["+255765123456","+255754111222","+255759999888","+255712345678","+255767222333","+255755000111","+255756000222","+255758000333","+255764000444","+255769000555"];
+function normPhone(p){ return (p||'').toString().replace(/[\s\-\(\)]/g,'').replace(/^0/,'+255').replace(/^255/,'+255'); }
 function isOnSirian(phone){
   let n = normPhone(phone);
   let inMySaved = savedContacts.some(c=> normPhone(c.phone)===n && c.onSirian!==false);
@@ -260,7 +286,6 @@ function updateStats(){
   document.getElementById('statChats').innerText = chats.length;
   document.getElementById('statGroups').innerText = groups.length;
 }
-function normPhone(p){ return (p||'').replace(/[\s\-]/g,'').replace(/^0/,'+255'); }
 function filterChats(){ renderChats(); }
 function renderChats(){
   let el = document.getElementById('chatList');
@@ -282,6 +307,84 @@ function sendMsg(){
   inp.value=''; renderMsgs(); renderChats();
   setTimeout(()=>{ chats[currentChat].msgs.push({t:curLang==='sw'?'Sawa, nimepokea! 👍':'Okay, received! 👍', me:false}); localStorage.setItem('sirian_chats', JSON.stringify(chats)); renderMsgs(); renderChats(); }, 1000);
 }
+// ===== SYNC CONTACTS KAMA WHATSAPP =====
+function setContactFilter(f){
+  contactFilter=f;
+  ['filter-all','filter-on','filter-off'].forEach(id=> document.getElementById(id).classList.remove('active'));
+  document.getElementById('filter-'+f).classList.add('active');
+  renderContactList();
+}
+async function syncPhoneContacts(){
+  let out1=document.getElementById('syncResult'); let out2=document.getElementById('syncResult2');
+  let show = (html)=>{ if(out1) out1.innerHTML=html; if(out2) out2.innerHTML=html; };
+  show(`<div class="sync-progress">${curLang==='sw'?'⏳ Inaomba ruhusa... Tafadhali chagua Contacts kwenye dirisha litakaloonekana':'⏳ Requesting permission... Please pick Contacts in the popup'}<div class="bar"><i id="syncBar" style="width:30%"></i></div></div>`);
+  // Njia 1: Contact Picker API - Chrome Android - kama WhatsApp
+  if('contacts' in navigator && navigator.contacts && navigator.contacts.select){
+    try{
+      const props=['name','tel']; const opts={multiple:true};
+      const picked = await navigator.contacts.select(props, opts);
+      if(!picked || picked.length===0){ show(`<p class="small">${curLang==='sw'?'Hukuchagua mtu yeyote. Jaribu tena.':'You did not pick anyone. Try again.'}</p>`); return; }
+      processPickedContacts(picked.map(p=>({name:(p.name&&p.name[0])||'Bila Jina', phone:(p.tel&&p.tel[0])||''})).filter(c=>c.phone), show);
+      return;
+    }catch(e){
+      // Mtumiaji amekataa au kosa - nenda njia ya 2
+      console.log(e);
+    }
+  }
+  // Njia 2: Kama browser hairuhusu moja kwa moja - tumia File ya Contacts / Ingiza mwenyewe
+  show(`<div class="card"><b>${curLang==='sw'?'📱 Simu yako inahitaji hatua moja zaidi':'📱 Your phone needs one more step'}</b><p class="small" style="text-align:left">${curLang==='sw'?'Chrome hairuhusu tovuti kuona Contacts moja kwa moja bila kuchagua. Fanya hivi kama WhatsApp:<br><br>1️⃣ Nenda Contacts > ⋮ > Export > Export kama .vcf<br>2️⃣ Rudi hapa SIRIAN > Settings > Chagua File ya Contacts (.vcf)<br>3️⃣ SIRIAN itachambua moja kwa moja zipi zipo SIRIAN<br><br>AU andika namba hapa chini uziingize haraka:' : 'Chrome does not allow websites to see Contacts directly without picking. Do this like WhatsApp:<br><br>1️⃣ Go to Contacts > ⋮ > Export > Export as .vcf<br>2️⃣ Come back to SIRIAN > Settings > Choose Contacts File (.vcf)<br>3️⃣ SIRIAN will check which are on SIRIAN<br><br>OR paste numbers below:'}</p><textarea id="pasteNumbers" rows="3" style="width:100%;padding:10px;border-radius:8px;background:#202c33;color:white;border:1px solid #333" placeholder="Jina - Namba, mfano:\nMama - +255 7XX XXX XXX\nBaba - +255 7XX XXX XXX"></textarea><button class="btn" onclick="importPastedNumbers()">${curLang==='sw'?'CHAMBUA NAMBA HIZI':'CHECK THESE NUMBERS'}</button></div>`);
+}
+function processPickedContacts(list, show){
+  let onList=[], offList=[];
+  list.forEach(c=>{
+    let n=normPhone(c.phone);
+    let exists = savedContacts.find(x=> normPhone(x.phone)===n);
+    let on = isOnSirian(n);
+    if(!exists){ savedContacts.push({name:c.name, phone:n, onSirian:on, fromPhone:true}); }
+    if(on) onList.push({name:c.name, phone:n}); else offList.push({name:c.name, phone:n});
+  });
+  localStorage.setItem('sirian_contacts', JSON.stringify(savedContacts));
+  renderContactList(); renderAll();
+  let html=`<div class="sync-progress" style="border:1px solid #00a884"><b>✅ ${curLang==='sw'?'Imefanyika! Nimechambua':'Done! I checked'} ${list.length} ${curLang==='sw'?'namba':'numbers'}</b><br><span style="color:#00a884">✅ ${onList.length} ${curLang==='sw'?'WAPO kwenye SIRIAN':'ARE ON SIRIAN'}</span> • <span style="color:#ff9a9a">❌ ${offList.length} ${curLang==='sw'?'HAWAPO':'NOT ON SIRIAN'}</span><div class="bar"><i style="width:100%"></i></div><p class="small">${curLang==='sw'?'Bonyeza ✅ Wapo SIRIAN juu kuona waliopo tu.':'Tap ✅ On SIRIAN above to see only those on SIRIAN.'}</p></div>`;
+  if(show) show(html);
+  setContactFilter('on');
+  alert(curLang==='sw'?`Imefanyika!\n${onList.length} wapo SIRIAN\n${offList.length} hawapo`:`Done!\n${onList.length} on SIRIAN\n${offList.length} not on SIRIAN`);
+}
+function importPastedNumbers(){
+  let txt=document.getElementById('pasteNumbers').value.trim();
+  if(!txt) return alert(curLang==='sw'?'Andika namba kwanza':'Write numbers first');
+  let lines=txt.split('\n'); let list=[];
+  lines.forEach(line=>{
+    let m=line.match(/(\+?\d[\d\s\-]{8,})/);
+    if(m){ let name=line.replace(m[0],'').replace(/[-,:]/g,'').trim()||m[0]; list.push({name:name, phone:m[0]}); }
+  });
+  if(list.length===0) return alert(curLang==='sw'?'Sikupata namba. Andika kama: Mama - +255 7XX':'No numbers found. Write like: Mama - +255 7XX');
+  processPickedContacts(list, (html)=>{ document.getElementById('syncResult').innerHTML=html; document.getElementById('syncResult2').innerHTML=html; });
+}
+function importContactsFile(event){
+  let file=event.target.files[0]; if(!file) return;
+  let reader=new FileReader();
+  reader.onload=function(e){
+    let text=e.target.result;
+    let list=[];
+    if(file.name.toLowerCase().endsWith('.vcf')){
+      let blocks=text.split('BEGIN:VCARD');
+      blocks.forEach(b=>{
+        let nameM=b.match(/FN:(.+)/); let telM=b.match(/TEL[^:]*:(.+)/);
+        if(telM){ list.push({name: nameM ? nameM[1].trim() : telM[1].trim(), phone: telM[1].trim()}); }
+      });
+    } else {
+      text.split('\n').forEach(line=>{
+        let m=line.match(/(\+?\d[\d\s\-]{8,})/);
+        if(m){ let name=line.replace(m[0],'').replace(/[",;]/g,'').trim()||m[0]; list.push({name:name, phone:m[0]}); }
+      });
+    }
+    if(list.length===0){ alert(curLang==='sw'?'Sikupata namba kwenye file. Jaribu .vcf kutoka Contacts.':'No numbers found in file. Try .vcf from Contacts.'); return; }
+    processPickedContacts(list, (html)=>{ document.getElementById('syncResult').innerHTML=html; });
+    alert(curLang==='sw'?`Nimeingiza ${list.length} contacts kutoka kwenye file!`:`Imported ${list.length} contacts from file!`);
+  };
+  reader.readAsText(file);
+}
 function openContacts(){
   document.getElementById('contactModal').classList.add('open');
   document.getElementById('modalTitle').innerText = curLang==='sw'?'Chagua Mtu':'Select Contact';
@@ -292,8 +395,10 @@ function closeContacts(){ document.getElementById('contactModal').classList.remo
 function renderContactList(){
   let q = (document.getElementById('contactSearch')?.value||'').toLowerCase();
   let list = myContacts().filter(c=> c.name.toLowerCase().includes(q) || c.phone.includes(q));
+  if(contactFilter==='on') list=list.filter(c=> isOnSirian(c.phone));
+  if(contactFilter==='off') list=list.filter(c=> !isOnSirian(c.phone));
   let el = document.getElementById('contactList');
-  if(list.length===0){ el.innerHTML=`<p class="small">${curLang==='sw'?'Huna mtu uliyemhifadhi bado. Weka namba mpya juu ili umtafute, au bonyeza New Contact.':'You have no saved contacts yet. Enter a new number above to search, or tap New Contact.'}</p>`; return; }
+  if(list.length===0){ el.innerHTML=`<p class="small">${curLang==='sw'?'Hakuna mtu kwenye kundi hili. Bonyeza 🔄 ANGALIA CONTACTS ZANGU juu kusync namba za simu.':'No person in this group. Tap 🔄 CHECK MY CONTACTS above to sync phone numbers.'}</p>`; return; }
   el.innerHTML = list.map(c=>{
     let on = isOnSirian(c.phone);
     return `<div class="contact-row" onclick="startChatWith('${c.phone}','${c.name.replace(/'/g,'')}')"><div class="avatar">${c.name.charAt(0).toUpperCase()}</div><div style="flex:1"><b>${c.name}</b><br><span style="color:#8696a0;font-size:13px">${c.phone}</span></div>${on ? `<span class="badge">${curLang==='sw'?'Yupo':'On SIRIAN'}</span>` : `<span class="badge" style="background:#374045">${curLang==='sw'?'Hayupo':'Not on SIRIAN'}</span>`}</div>`;
