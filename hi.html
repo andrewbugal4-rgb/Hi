@@ -3,173 +3,254 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HI</title>
+<title>SIRIAN - Chat Bila Limiti</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
 body{background:#0b141a;color:#e9edef}
-.top{background:#202c33;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
-.top b{font-size:24px;letter-spacing:2px}
-.top span{cursor:pointer;margin-left:12px;font-size:20px}
-.screen{display:none;padding:12px;padding-bottom:90px;max-width:560px;margin:auto}
-.screen.active{display:block}
-.card{background:#111b21;border-radius:14px;padding:16px;margin-bottom:12px}
-input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #2a3942;background:#202c33;color:#fff;margin-top:8px;outline:none}
-button{width:100%;padding:13px;border:none;border-radius:10px;background:#00a884;color:#fff;font-weight:bold;margin-top:10px;cursor:pointer;font-size:16px}
-button.sec{background:#2a3942}
-button.danger{background:#a83232}
-.small{font-size:13px;color:#8696a0;margin-top:6px}
-.chat-item{display:flex;gap:12px;padding:12px;background:#111b21;border-radius:12px;margin-bottom:8px;cursor:pointer;align-items:center}
-.avatar{width:48px;height:48px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden}
-.avatar img{width:100%;height:100%;object-fit:cover}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#202c33;display:flex;padding:10px;max-width:560px;margin:auto;z-index:20}
-.bottom div{flex:1;text-align:center;cursor:pointer;font-size:13px;color:#aebac1}
-.bottom div.on{color:#00a884;font-weight:bold}
-.msg{max-width:85%;padding:9px 12px;border-radius:12px;margin:8px 0;word-break:break-word}
-.me{background:#005c4b;margin-left:auto}
-.other{background:#202c33}
-.ticks{font-size:11px;text-align:right;color:#8696a0}
-.ticks.green{color:#53bdeb;font-weight:bold}
-.topChat{background:#202c33;padding:10px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10}
-.chatInput{position:fixed;bottom:52px;left:0;right:0;background:#202c33;padding:10px;display:flex;gap:8px;max-width:560px;margin:auto;z-index:15}
-.chatInput input{margin:0}
-.chatInput button{width:52px;margin:0}
+.header{background:#202c33;padding:15px;text-align:center;font-size:24px;font-weight:bold;color:#00a884;letter-spacing:2px}
+.header span{color:white;font-size:13px;letter-spacing:0;display:block;font-weight:normal}
+.container{max-width:480px;margin:0 auto;padding:15px}
+.card{background:#111b21;border-radius:12px;padding:18px;margin-bottom:12px}
+input,select{width:100%;padding:13px;margin:8px 0;border-radius:8px;border:1px solid #333;background:#202c33;color:white;font-size:16px;outline:none}
+.btn{width:100%;padding:13px;border:none;border-radius:8px;background:#00a884;color:white;font-size:16px;font-weight:bold;cursor:pointer;margin-top:8px}
+.btn:active{opacity:0.8}
+.btn2{background:#374045}
+.small{font-size:13px;color:#8696a0;text-align:center;margin-top:10px;line-height:1.5}
+.nav{display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap}
+.nav button{flex:1;padding:11px;border:none;border-radius:8px;background:#202c33;color:white;cursor:pointer}
+.nav button.active{background:#00a884}
+.page{display:none}
+.page.active{display:block}
+.chat-item{display:flex;gap:12px;padding:12px;background:#111b21;border-radius:10px;margin-bottom:8px;cursor:pointer;align-items:center}
+.avatar{width:48px;height:48px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;flex-shrink:0}
+.badge{background:#00a884;color:white;font-size:11px;padding:2px 7px;border-radius:10px}
+.msg{background:#005c4b;padding:9px 12px;border-radius:10px;margin:6px 0;max-width:85%}
+.msg.me{background:#00a884;margin-left:auto}
+.chat-box{background:#0b141a;height:320px;overflow-y:auto;padding:10px;border-radius:10px}
 .flex{display:flex;gap:8px}
-.flex button{flex:1}
-.pill{display:inline-block;background:#2a3942;padding:6px 10px;border-radius:20px;font-size:13px;margin:4px 4px 0 0;cursor:pointer}
-.pill.on{background:#00a884}
-.tag{display:inline-block;background:#00a884;padding:3px 8px;border-radius:10px;font-size:11px;margin-left:5px}
+.hidden{display:none!important}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#202c33;padding:14px;border-radius:10px;text-align:center}
+.stat b{font-size:22px;color:#00a884;display:block}
+.lang-box{display:flex;gap:8px;margin-bottom:10px}
+.lang-box button{flex:1;padding:10px;border:1px solid #00a884;background:transparent;color:white;border-radius:8px;cursor:pointer;font-weight:bold}
+.lang-box button.active{background:#00a884;color:white}
 </style>
 </head>
 <body>
-<div class="top"><b>HI</b><span><span onclick="show('search')">🔍</span> <span onclick="show('settings')">⚙️</span> <span onclick="show('profile')">👤</span></span></div>
-
-<div id="login" class="screen active">
-<div class="card"><h2>Karibu HI</h2><p class="small">Ingia na namba yako ya simu. Hakuna limiti.</p>
-<label>Namba ya simu</label><input id="phone" placeholder="+255 7XX XXX XXX" value="+255 ">
-<button onclick="sendCode()">Tuma Code ya Uthibitisho</button>
-<div id="codeBox" style="display:none"><label>Weka Code (Demo: 123456)</label><input id="code" placeholder="123456"><button onclick="verify()">Ingia</button></div>
-<p class="small">Demo: Code ni 123456. Kwenye app halisi itatumwa kwa SMS.</p>
-<button class="sec" onclick="show('owner')">Dashboard ya Mmiliki</button>
+<div class="header">SIRIAN <span>Chat Bila Limiti • Chat Without Limits</span></div>
+<div class="container">
+<div id="page-login" class="page active">
+  <div class="card">
+    <h2 style="text-align:center">Karibu SIRIAN 👋</h2>
+    <p class="small" data-i18n="welcome_sub">Chagua lugha / Choose language</p>
+    <div class="lang-box">
+      <button id="btn-sw" class="active" onclick="setLang('sw')">🇹🇿 Kiswahili</button>
+      <button id="btn-en" onclick="setLang('en')">🇬🇧 English</button>
+    </div>
+    <label data-i18n="phone_label">Namba ya Simu</label>
+    <input id="phone" type="tel" placeholder="+255 7XX XXX XXX" value="+255 ">
+    <button class="btn" onclick="sendCode()" data-i18n="send_code">Tuma Code</button>
+    <div id="codeArea" class="hidden">
+      <label data-i18n="code_label">Code ya Kuthibitisha</label>
+      <input id="code" type="tel" placeholder="Weka 123456" maxlength="6">
+      <button class="btn" onclick="doLogin()" data-i18n="enter_btn">INGIA KATIKA SIRIAN →</button>
+      <p class="small"><span data-i18n="code_is">Code ya kuingia ni</span> <b style="color:#00a884;font-size:16px">123456</b></p>
+    </div>
+    <p class="small" data-i18n="terms">Kwa kuendelea unakubali Masharti ya SIRIAN.<br>Jina lako halitabadilika kamwe.</p>
+  </div>
 </div>
-<div class="card"><b>HI - Bila Limiti</b><p class="small">Hakuna limiti ya chats, meseji, groups, status, calls, watu. Tumia kadri utakavyo.</p></div>
+<div id="page-main" class="page">
+  <div class="lang-box">
+    <button id="btn-sw2" onclick="setLang('sw')">🇹🇿 Kiswahili</button>
+    <button id="btn-en2" onclick="setLang('en')">🇬🇧 English</button>
+  </div>
+  <div class="nav">
+    <button id="tab-chats" class="active" onclick="showTab('chats')" data-i18n="chats">Chats</button>
+    <button id="tab-groups" onclick="showTab('groups')" data-i18n="groups">Groups</button>
+    <button id="tab-status" onclick="showTab('status')" data-i18n="status">Status</button>
+    <button id="tab-calls" onclick="showTab('calls')" data-i18n="calls">Calls</button>
+  </div>
+  <div id="tab-chats-div">
+    <div class="card">
+      <div class="flex"><input id="newName" data-i18n-ph="new_friend" placeholder="Jina la rafiki mpya..."><button class="btn" style="width:90px" onclick="addChat()" data-i18n="new_btn">+ Mpya</button></div>
+    </div>
+    <div id="chatList"></div>
+  </div>
+  <div id="tab-groups-div" class="hidden">
+    <div class="card"><h3 data-i18n="my_groups">Groups Zangu</h3><p class="small" data-i18n="group_sub">Tengeneza Group, waalike marafiki</p><div class="flex"><input id="groupName" data-i18n-ph="group_name" placeholder="Jina la Group..."><button class="btn" style="width:90px" onclick="addGroup()" data-i18n="create">Tengeneza</button></div></div>
+    <div id="groupList"></div>
+  </div>
+  <div id="tab-status-div" class="hidden">
+    <div class="card"><h3 data-i18n="my_status">Status Yangu</h3><input id="statusText" data-i18n-ph="status_ph" placeholder="Andika Status yako..."><button class="btn" onclick="addStatus()" data-i18n="put_status">Weka Status</button></div>
+    <div id="statusList"></div>
+  </div>
+  <div id="tab-calls-div" class="hidden">
+    <div class="card"><h3 data-i18n="calls">Calls</h3><p class="small" data-i18n="call_sub">Piga simu bure ndani ya SIRIAN</p><button class="btn btn2" onclick="alert('Inapiga... (Demo Call)')">📞 <span data-i18n="voice_call">Piga Sauti</span></button><button class="btn btn2" onclick="alert('Inapiga Video... (Demo)')">📹 <span data-i18n="video_call">Piga Video</span></button></div>
+  </div>
+  <div id="chatWindow" class="card hidden">
+    <h3 id="chatTitle">Chat</h3>
+    <div class="chat-box" id="messages"></div>
+    <div class="flex" style="margin-top:10px"><input id="msgInput" data-i18n-ph="type_msg" placeholder="Andika ujumbe..."><button class="btn" style="width:80px" onclick="sendMsg()" data-i18n="send">Tuma</button></div>
+    <button class="btn btn2" onclick="closeChat()" data-i18n="back">← Rudi</button>
+  </div>
+  <button class="btn btn2" onclick="logout()" data-i18n="logout">Toka / Badilisha Namba</button>
 </div>
-
-<div id="chats" class="screen">
-<div class="flex"><input id="searchInput" placeholder="Tafuta mtu au meseji..." oninput="renderChats()"><button style="width:80px" onclick="newChat()">+ Mpya</button></div>
-<div id="chatList"></div>
-<button class="sec" onclick="show('hidden')">🔒 Chat Zilizofichwa</button>
-<button class="sec" onclick="newGroup()">👥 Tengeneza Group</button>
-<button class="sec" onclick="show('archive')">📦 Archive</button>
-<div class="card"><b>Share Link ya Kualika</b><p class="small" id="inviteLink">https://hi.chat/join</p><button onclick="copyInvite()">Copy Link</button></div>
-<div class="card"><b>Backup</b><p class="small" id="backupInfo">Data yako imehifadhiwa kwenye simu yako.</p><button onclick="exportBackup()">Download Backup</button><button class="sec" onclick="importBackup()">Ingiza Backup</button></div>
-</div>
-
-<div id="status" class="screen">
-<div class="card"><b>Status Yangu</b><p class="small">Inakaa saa 24 tu kwa wengine. Hakuna limiti ya kuweka status ngapi.</p><input id="statusText" placeholder="Andika Status..."><button onclick="addStatus()">Weka Status</button></div>
-<div class="card"><b>Status za Marafiki</b><p class="small">Wanaona wale mmeseviana namba tu.</p></div>
-<div id="statusList"></div>
-<div class="card"><b>Historia ya Status Zangu</b><div id="statusHistory"></div></div>
-</div>
-
-<div id="calls" class="screen">
-<div class="card"><b>Video Call - Watu 2 tu</b><p class="small">Group Video Call itakuja baadaye.</p><button onclick="startCall()">📹 Anza Video Call</button><p class="small" id="callStatus"></p><video id="localVideo" autoplay muted playsinline style="width:100%;border-radius:10px;display:none;background:#000"></video></div>
-<div class="card"><b>Historia ya Calls</b><div id="callList"></div></div>
-</div>
-
-<div id="search" class="screen"><div class="card"><h3>Search</h3><input id="globalSearch" placeholder="Tafuta mtu, meseji, group..." oninput="globalSearchFn()"><div id="searchResult"></div><p class="small">Tafuta mtu au meseji kwenye chats zote</p></div></div>
-
-<div id="room" class="screen" style="padding:0">
-<div class="topChat"><span onclick="show('chats')">←</span><div class="avatar" id="roomAvatar">👤</div><div style="flex:1"><b id="roomName">Mtu</b><div id="typing" class="small">Online</div><div id="disappearLabel" class="small">Disappearing: Zima</div></div><span onclick="toggleDisappear()">⏰</span><span onclick="toggleHide()">🔒</span></div>
-<div style="padding:12px;padding-bottom:160px" id="messages"></div>
-<div class="chatInput"><input id="msgInput" placeholder="Andika meseji..."><button onclick="sendMsg()">➤</button></div>
-<div style="padding:10px;display:flex;gap:6px;flex-wrap:wrap;background:#111b21;position:fixed;bottom:0;left:0;right:0;max-width:560px;margin:auto;z-index:14"><span class="pill" onclick="sendMedia('📷 Picha')">📷 Picha</span><span class="pill" onclick="sendMedia('🎤 Voice Note')">🎤 Voice</span><span class="pill" onclick="sendMedia('🎥 Video Note')">🎥 Video Note</span><span class="pill" onclick="document.getElementById('fileInput').click()">📎 Faili</span><span class="pill" onclick="blockUser()">🚫 Block</span><span class="pill" onclick="reportUser()">⚠️ Report</span><span class="pill" onclick="archiveChat()">📦 Archive</span><span class="pill" onclick="clearChat()">🗑️ Futa Chat</span></div>
-<input type="file" id="fileInput" hidden onchange="sendFile(event)">
-</div>
-
-<div id="hidden" class="screen"><div class="card"><h3>🔒 Chat Zilizofichwa</h3><p class="small">Weka Password kufungua</p><input type="password" id="hiddenPass" placeholder="Password"><button onclick="unlockHidden()">Fungua</button><div id="hiddenList"></div></div></div>
-
-<div id="archive" class="screen"><div class="card"><h3>📦 Archive</h3><p class="small">Chats ulizoweka Archive hazifutwi.</p><div id="archiveList"></div></div></div>
-
-<div id="profile" class="screen"><div class="card"><h3>Profile Yangu</h3><div class="avatar" style="width:80px;height:80px;font-size:36px" onclick="document.getElementById('picInput').click()">📷</div><input type="file" id="picInput" hidden onchange="changePic(event)"><p class="small">Bonyeza picha kubadilisha muda wowote</p><label>Jina</label><input id="myName" value="Mimi"><label>Username</label><input id="myUser" value="@mimi"><label>About / Bio</label><textarea id="myBio">Niko HI 👋</textarea><label>Cover Photo / Description</label><input id="myDesc" placeholder="Maelezo ya biashara..."><button onclick="saveProfile()">Hifadhi Profile</button></div><div class="card"><b>Takwimu Zangu</b><div id="myStats"></div></div></div>
-
-<div id="settings" class="screen">
-<div class="card"><h3>Settings</h3>
-<p><b>Account</b> - Badilisha namba, Security</p>
-<p><b>Privacy</b> - Blocked, Disappearing, Online</p>
-<label><input type="checkbox" id="readReceipts" checked onchange="saveSettings()"> Tiki za Kijani (Read Receipts)</label><br>
-<label><input type="checkbox" id="showOnline" checked onchange="saveSettings()"> Nionekane Online</label><br>
-<label><input type="checkbox" id="showTyping" checked onchange="saveSettings()"> Nionekane Ninaandika</label>
-<p><b>Lists</b> - Panga watu na Groups</p>
-<p><b>Chats</b> - Theme, Wallpaper, History</p>
-<p><b>Appearance</b></p><select id="theme" onchange="applyTheme()"><option value="dark">Dark</option><option value="light">Light</option><option value="green">Green</option></select>
-<p><b>Notifications</b></p><label><input type="checkbox" checked> Sauti ya Meseji</label><br><label><input type="checkbox" checked> Sauti ya Call</label>
-<p><b>Storage and data</b> - Auto-download, Matumizi ya Mtandao</p>
-<p class="small">Subscriptions, Linked Devices na Events zimewekwa pembeni kwa sasa. Zitakuja baadaye.</p>
-<button onclick="exportBackup()">Backup Data Yote</button>
-<button class="danger" onclick="if(confirm('Una uhakika? Hii itafuta kila kitu!')){localStorage.clear();location.reload()}">Futa Kila Kitu Kabisa</button>
+<div id="page-owner" class="page">
+  <div class="card" style="border:2px solid #ffd700">
+    <h2>👑 Dashboard ya Mmiliki - SIRI</h2>
+    <p class="small">Hii inaonekana kwa wewe tu. Usimtumie mtu link ya #mmiliki</p>
+    <div class="stat-grid">
+      <div class="stat"><b id="statUsers">1</b><span data-i18n="users">Watumiaji</span></div>
+      <div class="stat"><b id="statChats">0</b><span data-i18n="chats">Chats</span></div>
+      <div class="stat"><b id="statGroups">0</b><span data-i18n="groups">Groups</span></div>
+      <div class="stat"><b>SIRIAN</b><span data-i18n="app_name">Jina la App</span></div>
+    </div>
+    <button class="btn" onclick="alert('SIRIAN ni yako milele. Jina halitabadilika.')">🔒 Jina Langu ni SIRIAN</button>
+    <button class="btn btn2" onclick="backToApp()" data-i18n="back_app">Rudi Kwenye App</button>
+  </div>
 </div>
 </div>
-
-<div id="owner" class="screen"><div class="card"><h3>Dashboard ya Mmiliki</h3><p class="small">Unaona idadi tu. HUONI chat za mtu yeyote.</p><p>Wamejiunga: <b id="totalUsers">0</b></p><p>Wako Online: <b id="onlineUsers">0</b></p><p>Wamejiunga Leo: <b id="todayUsers">0</b></p><p>Group Zilizopo: <b id="totalGroups">0</b></p><p>Status Leo: <b id="todayStatus">0</b></p><p>Meseji Zote: <b id="totalMsgs">0</b></p><p class="small">Password yako wewe mwenyewe utaiweka hapa - hakuna mtu mwingine anaijua.</p><input type="password" id="ownerPass" placeholder="Weka Password Yako ya Mmiliki"><button onclick="saveOwnerPass()">Hifadhi Password</button></div><div class="card"><b>Historia</b><div id="ownerHistory"></div></div></div>
-
-<div class="bottom"><div class="on" onclick="show('chats')">💬<br>Chats</div><div onclick="show('status')">●<br>Status</div><div onclick="show('calls')">📹<br>Calls</div><div onclick="show('settings')">⚙️<br>Settings</div></div>
-
 <script>
-let chats=JSON.parse(localStorage.getItem('hi_chats')||'[]');
-let statuses=JSON.parse(localStorage.getItem('hi_status')||'[]');
-let statusHistory=JSON.parse(localStorage.getItem('hi_status_history')||'[]');
-let calls=JSON.parse(localStorage.getItem('hi_calls')||'[]');
-let blockedList=JSON.parse(localStorage.getItem('hi_blocked')||'[]');
-let stats=JSON.parse(localStorage.getItem('hi_stats')||'{"totalJoins":12,"totalMsgs":0,"totalCalls":0,"started":Date.now()}');
-let current=null;
-let myName=localStorage.getItem('hi_name')||'Mimi';
-function saveAll(){localStorage.setItem('hi_chats',JSON.stringify(chats));localStorage.setItem('hi_status',JSON.stringify(statuses));localStorage.setItem('hi_status_history',JSON.stringify(statusHistory));localStorage.setItem('hi_calls',JSON.stringify(calls));localStorage.setItem('hi_blocked',JSON.stringify(blockedList));localStorage.setItem('hi_stats',JSON.stringify(stats));updateBackupInfo();}
-function save(){saveAll();}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='chats')renderChats();if(id==='owner')renderOwner();if(id==='status')renderStatus();if(id==='archive')renderArchive();if(id==='calls')renderCalls();if(id==='profile')renderMyStats();}
-function sendCode(){if(document.getElementById('phone').value.length<10){alert('Weka namba sahihi +255');return}document.getElementById('codeBox').style.display='block';alert('Code ya Demo: 123456');}
-function verify(){if(document.getElementById('code').value==='123456'){localStorage.setItem('hi_phone',document.getElementById('phone').value);stats.totalJoins++;saveAll();show('chats');}else alert('Code si sahihi');}
-function newChat(){let n=prompt('Jina la mtu:');if(!n)return;if(blockedList.includes(n)){alert('Umem-block huyu mtu');return}let c={id:Date.now()+Math.random(),name:n,msgs:[],hidden:false,archived:false,disappear:'Zima',blocked:false,created:Date.now()};chats.push(c);saveAll();renderChats();}
-function newGroup(){let n=prompt('Jina la Group:');if(!n)return;let members=prompt('Weka majina ya wanachama (tenganisha na koma):')||'';chats.push({id:Date.now()+Math.random(),name:'👥 '+n,msgs:[],hidden:false,archived:false,disappear:'Zima',isGroup:true,members:members,admin:myName,created:Date.now()});saveAll();renderChats();alert('Group "'+n+'" imetengenezwa');}
-function renderChats(){let q=(document.getElementById('searchInput').value||'').toLowerCase();let el=document.getElementById('chatList');el.innerHTML='';chats.filter(c=>!c.hidden&&!c.archived&&c.name.toLowerCase().includes(q)).forEach(c=>{let last=c.msgs[c.msgs.length-1];let unread=c.msgs.filter(m=>!m.read&&m.from!=='me').length;el.innerHTML+=`<div class="chat-item" onclick="openChat(${c.id})"><div class="avatar">${c.name[0]}</div><div style="flex:1"><b>${c.name}</b> ${c.isGroup?'<span class="tag">GROUP</span>':''}<div class="small">${last?last.text:'Hakuna meseji - Anza ku-chat'}</div></div><span>${last&&last.read?'✓✓':last?'✓✓':''} ${unread?'<span class="tag">'+unread+'</span>':''}</span></div>`;});if(chats.filter(c=>!c.hidden&&!c.archived).length===0){el.innerHTML='<div class="card"><b>Karibu HI</b><p class="small">Bonyeza + Mpya kuanza chat. Hakuna limiti.</p></div>';}}
-function openChat(id){current=chats.find(c=>c.id===id);if(!current)return;if(current.blocked){alert('Umem-block huyu mtu');return}document.getElementById('roomName').textContent=current.name;document.getElementById('roomAvatar').textContent=current.name[0];document.getElementById('disappearLabel').textContent='Disappearing: '+(current.disappear||'Zima');show('room');renderMsgs();}
-function renderMsgs(){let el=document.getElementById('messages');el.innerHTML='';if(!current)return;current.msgs.forEach((m,i)=>{let isMe=m.from==='me'||!m.from;el.innerHTML+=`<div class="msg ${isMe?'me':'other'}">${m.text}<div style="margin-top:6px"><span class="pill" onclick="react(${i},'❤️')">❤️</span><span class="pill" onclick="react(${i},'😂')">😂</span><span class="pill" onclick="react(${i},'😮')">😮</span> ${m.reaction||''} <span class="pill" onclick="deleteMsg(${i})">🗑️</span></div><div class="ticks ${m.read?'green':''}">${m.read?'✓✓ Ameisoma':m.delivered?'✓✓ Imefika':'✓ Imetumwa'} • ${new Date(m.time||Date.now()).toLocaleString('sw-TZ')}</div></div>`;});}
-function sendMsg(){let v=document.getElementById('msgInput').value.trim();if(!v||!current)return;current.msgs.push({text:v,read:false,delivered:true,from:'me',time:Date.now()});stats.totalMsgs++;document.getElementById('msgInput').value='';saveAll();renderMsgs();document.getElementById('typing').textContent='Anaandika...';setTimeout(()=>{document.getElementById('typing').textContent='Online';if(current&&current.msgs.length){current.msgs[current.msgs.length-1].read=true;saveAll();renderMsgs();}},1500);}
-function sendMedia(t){if(!current)return;current.msgs.push({text:t,read:false,delivered:true,from:'me',time:Date.now()});stats.totalMsgs++;saveAll();renderMsgs();}
-function sendFile(e){let f=e.target.files[0];if(!f||!current)return;current.msgs.push({text:'📎 '+f.name+' ('+Math.round(f.size/1024)+' KB)',read:false,delivered:true,from:'me',time:Date.now()});saveAll();renderMsgs();}
-function react(i,e){current.msgs[i].reaction=e;saveAll();renderMsgs();}
-function deleteMsg(i){if(confirm('Futa meseji hii?')){current.msgs.splice(i,1);saveAll();renderMsgs();}}
-function clearChat(){if(!current)return;if(confirm('Futa meseji zote za chat hii?')){current.msgs=[];saveAll();renderMsgs();}}
-function archiveChat(){if(!current)return;current.archived=true;saveAll();alert('Chat imewekwa Archive');show('chats');}
-function renderArchive(){let el=document.getElementById('archiveList');el.innerHTML='';chats.filter(c=>c.archived).forEach(c=>{el.innerHTML+=`<div class="chat-item" onclick="unarchiveChat(${c.id})"><div class="avatar">${c.name[0]}</div><b>${c.name}</b><span class="small">Bonyeza kurudisha</span></div>`;});if(chats.filter(c=>c.archived).length===0)el.innerHTML='<p class="small">Hakuna Archive bado</p>';}
-function unarchiveChat(id){let c=chats.find(x=>x.id===id);c.archived=false;saveAll();renderArchive();renderChats();}
-function toggleDisappear(){if(!current)return;let v=prompt('Disappearing Messages: Zima / Saa 24 / Siku 7 / Siku 90',current.disappear||'Zima');if(v){current.disappear=v;document.getElementById('disappearLabel').textContent='Disappearing: '+v;saveAll();alert('Umebadilisha kuwa: '+v+' - Unaweza kubadilisha muda wowote');}}
-function toggleHide(){if(!current)return;current.hidden=true;saveAll();alert('Chat imefichwa. Nenda Chat Zilizofichwa kuifungua.');show('chats');}
-function unlockHidden(){if(document.getElementById('hiddenPass').value.length<3){alert('Weka Password');return}let el=document.getElementById('hiddenList');el.innerHTML='';chats.filter(c=>c.hidden).forEach(c=>{el.innerHTML+=`<div class="chat-item" onclick="openChat(${c.id})"><div class="avatar">${c.name[0]}</div><b>${c.name}</b> <span class="pill" onclick="event.stopPropagation();unhideChat(${c.id})">Rudisha</span></div>`;});if(chats.filter(c=>c.hidden).length===0)el.innerHTML='<p class="small">Hakuna chat zilizofichwa</p>';}
-function unhideChat(id){let c=chats.find(x=>x.id===id);c.hidden=false;saveAll();unlockHidden();renderChats();}
-function blockUser(){if(!current)return;if(confirm('Unataka kum-block '+current.name+'?')){current.blocked=true;blockedList.push(current.name);saveAll();alert('Ame-blockiwa');show('chats');}}
-function reportUser(){if(!current)return;if(confirm('Report itatuma meseji 5 za mwisho tu. Endelea?')){let last5=current.msgs.slice(-5).map(m=>m.text).join(' | ');alert('Report imetumwa - Meseji 5 za mwisho tu: '+last5);}}
-function addStatus(){let v=document.getElementById('statusText').value;if(!v)return;let s={text:v,time:Date.now(),by:myName};statuses.push(s);statusHistory.push(s);saveAll();document.getElementById('statusText').value='';renderStatus();}
-function renderStatus(){let el=document.getElementById('statusList');el.innerHTML='';statuses.forEach(s=>{el.innerHTML+=`<div class="card">${s.text}<div class="small">Na ${s.by||'Mimi'} • Inakaa saa 24 kwa wengine • ${new Date(s.time).toLocaleString('sw-TZ')}</div></div>`;});let h=document.getElementById('statusHistory');h.innerHTML='';statusHistory.slice().reverse().forEach(s=>{h.innerHTML+=`<div style="padding:8px;border-bottom:1px solid #2a3942">${s.text} <span class="small">${new Date(s.time).toLocaleDateString('sw-TZ')}</span></div>`;});}
-function changePic(e){let f=e.target.files[0];if(f){let r=new FileReader();r.onload=function(ev){localStorage.setItem('hi_pic',ev.target.result);alert('Picha ya Profile imebadilishwa!');};r.readAsDataURL(f);}else alert('Picha ya Profile imebadilishwa!');}
-function saveProfile(){myName=document.getElementById('myName').value;localStorage.setItem('hi_name',myName);localStorage.setItem('hi_user',document.getElementById('myUser').value);localStorage.setItem('hi_bio',document.getElementById('myBio').value);saveAll();alert('Profile imehifadhiwa - Unaweza kubadilisha muda wowote');}
-function renderMyStats(){let totalMsgs=chats.reduce((a,c)=>a+c.msgs.length,0);document.getElementById('myStats').innerHTML=`<p>Chats: <b>${chats.length}</b></p><p>Meseji: <b>${totalMsgs}</b></p><p>Status: <b>${statusHistory.length}</b></p><p>Calls: <b>${calls.length}</b></p><p>Mwanachama tangu: <b>${new Date(stats.started).toLocaleDateString('sw-TZ')}</b></p><p>Hakuna limiti</p>`;}
-function saveSettings(){saveAll();alert('Settings zimehifadhiwa');}
-function applyTheme(){let t=document.getElementById('theme').value;if(t==='light'){document.body.style.background='#f0f2f5';document.body.style.color='#111';}else if(t==='green'){document.body.style.background='#0a2e1f';document.body.style.color='#e9edef';}else{document.body.style.background='#0b141a';document.body.style.color='#e9edef';}localStorage.setItem('hi_theme',t);}
-function copyInvite(){let link=document.getElementById('inviteLink').textContent;if(navigator.clipboard)navigator.clipboard.writeText(link);alert('Link imekopiwa! Tuma kwa rafiki ajiunge');}
-function startCall(){document.getElementById('callStatus').textContent='Video Call inaanza... (Watu 2 tu)';let v=document.getElementById('localVideo');v.style.display='block';if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){navigator.mediaDevices.getUserMedia({video:true,audio:true}).then(s=>{v.srcObject=s;}).catch(()=>{document.getElementById('callStatus').textContent='Camera haikupatikana - Demo Mode (Watu 2 tu)';});}calls.push({with:current?current.name:'Mtu',time:Date.now(),type:'Video Call - Watu 2'});stats.totalCalls++;saveAll();renderCalls();}
-function renderCalls(){let el=document.getElementById('callList');el.innerHTML='';calls.slice().reverse().forEach(c=>{el.innerHTML+=`<div style="padding:10px;border-bottom:1px solid #2a3942">📹 ${c.with} • ${c.type} • ${new Date(c.time).toLocaleString('sw-TZ')}</div>`;});if(calls.length===0)el.innerHTML='<p class="small">Hakuna calls bado</p>';}
-function globalSearchFn(){let q=document.getElementById('globalSearch').value.toLowerCase();let el=document.getElementById('searchResult');el.innerHTML='';if(!q)return;chats.forEach(c=>{if(c.name.toLowerCase().includes(q))el.innerHTML+=`<div class="chat-item" onclick="openChat(${c.id})"><b>${c.name}</b></div>`;c.msgs.forEach(m=>{if(m.text.toLowerCase().includes(q))el.innerHTML+=`<div class="card"><b>${c.name}:</b> ${m.text}</div>`;});});if(!el.innerHTML)el.innerHTML='<p class="small">Hakuna matokeo</p>';}
-function saveOwnerPass(){if(document.getElementById('ownerPass').value.length<4){alert('Weka password yenye angalau herufi 4');return}localStorage.setItem('hi_owner_pass',document.getElementById('ownerPass').value);alert('Password ya Mmiliki imehifadhiwa - Ni wewe tu unaijua');}
-function renderOwner(){let totalMsgs=chats.reduce((a,c)=>a+c.msgs.length,0);document.getElementById('totalUsers').textContent=stats.totalJoins;document.getElementById('onlineUsers').textContent=Math.floor(Math.random()*5)+1;document.getElementById('todayUsers').textContent=3;document.getElementById('totalGroups').textContent=chats.filter(c=>c.isGroup).length;document.getElementById('todayStatus').textContent=statuses.length;document.getElementById('totalMsgs').textContent=totalMsgs+stats.totalMsgs;document.getElementById('ownerHistory').innerHTML=`<p>Meseji: <b>${totalMsgs}</b></p><p>Calls: <b>${stats.totalCalls}</b></p><p>Imesajiliwa tangu: <b>${new Date(stats.started).toLocaleDateString('sw-TZ')}</b></p><p>Hakuna limiti</p>`;}
-function exportBackup(){let data={chats,statuses,statusHistory,calls,stats,exported:Date.now()};let blob=new Blob([JSON.stringify(data)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='HI-Backup.json';a.click();alert('Backup imedownloadiwa');}
-function importBackup(){let inp=document.createElement('input');inp.type='file';inp.accept='.json';inp.onchange=e=>{let f=e.target.files[0];let r=new FileReader();r.onload=ev=>{try{let d=JSON.parse(ev.target.result);chats=d.chats||chats;statuses=d.statuses||statuses;saveAll();alert('Backup imerudishwa');renderChats();}catch(err){alert('Backup si sahihi');}};r.readAsText(f);};inp.click();}
-function updateBackupInfo(){let el=document.getElementById('backupInfo');if(el)el.textContent='Chats: '+chats.length+' • Meseji: '+chats.reduce((a,c)=>a+c.msgs.length,0)+' • Hakuna limiti.';}
-setInterval(()=>{saveAll();},30000);
-setInterval(()=>{let now=Date.now();statuses=statuses.filter(s=>now-s.time<24*60*60*1000);saveAll();},60000);
-if(localStorage.getItem('hi_theme')){document.getElementById('theme').value=localStorage.getItem('hi_theme');applyTheme();}
-if(localStorage.getItem('hi_user'))document.getElementById('myUser').value=localStorage.getItem('hi_user');
-if(localStorage.getItem('hi_bio'))document.getElementById('myBio').value=localStorage.getItem('hi_bio');
-renderChats();renderStatus();renderCalls();updateBackupInfo();
+const LANG = {
+sw:{
+welcome_sub:"Chagua lugha / Choose language",
+phone_label:"Namba ya Simu",
+send_code:"Tuma Code",
+code_label:"Code ya Kuthibitisha",
+enter_btn:"INGIA KATIKA SIRIAN →",
+code_is:"Code ya kuingia ni",
+terms:"Kwa kuendelea unakubali Masharti ya SIRIAN.<br>Jina lako halitabadilika kamwe.",
+chats:"Chats",groups:"Groups",status:"Status",calls:"Calls",
+new_friend:"Jina la rafiki mpya...",new_btn:"+ Mpya",
+my_groups:"Groups Zangu",group_sub:"Tengeneza Group, waalike marafiki",
+group_name:"Jina la Group...",create:"Tengeneza",
+my_status:"Status Yangu",status_ph:"Andika Status yako...",put_status:"Weka Status",
+call_sub:"Piga simu bure ndani ya SIRIAN",voice_call:"Piga Sauti",video_call:"Piga Video",
+type_msg:"Andika ujumbe...",send:"Tuma",back:"← Rudi",
+logout:"Toka / Badilisha Namba",users:"Watumiaji",app_name:"Jina la App",back_app:"Rudi Kwenye App"
+},
+en:{
+welcome_sub:"Choose language / Chagua lugha",
+phone_label:"Phone Number",
+send_code:"Send Code",
+code_label:"Verification Code",
+enter_btn:"ENTER SIRIAN →",
+code_is:"Your login code is",
+terms:"By continuing you agree to SIRIAN Terms.<br>Your name will never change.",
+chats:"Chats",groups:"Groups",status:"Status",calls:"Calls",
+new_friend:"New friend name...",new_btn:"+ New",
+my_groups:"My Groups",group_sub:"Create a Group, invite friends",
+group_name:"Group Name...",create:"Create",
+my_status:"My Status",status_ph:"Write your Status...",put_status:"Post Status",
+call_sub:"Call for free inside SIRIAN",voice_call:"Voice Call",video_call:"Video Call",
+type_msg:"Type a message...",send:"Send",back:"← Back",
+logout:"Logout / Change Number",users:"Users",app_name:"App Name",back_app:"Back to App"
+}
+};
+let curLang = localStorage.getItem('sirian_lang')||'sw';
+function setLang(l){
+  curLang=l; localStorage.setItem('sirian_lang',l);
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    let k=el.getAttribute('data-i18n');
+    if(LANG[l][k]) el.innerHTML=LANG[l][k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    let k=el.getAttribute('data-i18n-ph');
+    if(LANG[l][k]) el.placeholder=LANG[l][k];
+  });
+  ['btn-sw','btn-en','btn-sw2','btn-en2'].forEach(id=>{
+    let b=document.getElementById(id); if(!b) return;
+    b.classList.remove('active');
+  });
+  if(l==='sw'){ document.getElementById('btn-sw').classList.add('active'); document.getElementById('btn-sw2').classList.add('active'); }
+  else{ document.getElementById('btn-en').classList.add('active'); document.getElementById('btn-en2').classList.add('active'); }
+  renderChats(); renderGroups(); renderStatus();
+}
+let chats = JSON.parse(localStorage.getItem('sirian_chats')||'[]');
+let groups = JSON.parse(localStorage.getItem('sirian_groups')||'[]');
+let statuses = JSON.parse(localStorage.getItem('sirian_status')||'[]');
+let currentChat = null;
+let myPhone = localStorage.getItem('sirian_phone')||'';
+if(window.location.hash === '#mmiliki'){
+  document.getElementById('page-login').classList.remove('active');
+  document.getElementById('page-main').classList.remove('active');
+  document.getElementById('page-owner').classList.add('active');
+  updateStats();
+}
+if(myPhone && window.location.hash !== '#mmiliki'){
+  document.getElementById('page-login').classList.remove('active');
+  document.getElementById('page-main').classList.add('active');
+  renderAll();
+}
+setLang(curLang);
+function sendCode(){
+  let p = document.getElementById('phone').value.trim();
+  if(p.length < 10){ alert(curLang==='sw'?'Weka namba sahihi, mfano +255 7XX XXX XXX':'Enter correct number, e.g. +255 7XX XXX XXX'); return; }
+  localStorage.setItem('sirian_phone_temp', p);
+  document.getElementById('codeArea').classList.remove('hidden');
+  document.getElementById('code').value = '123456';
+  document.getElementById('code').focus();
+  alert(curLang==='sw'?'Code yako ni 123456. Bonyeza INGIA sasa.':'Your code is 123456. Tap ENTER now.');
+}
+function doLogin(){
+  let p = document.getElementById('phone').value.trim() || localStorage.getItem('sirian_phone_temp') || '+255 ';
+  localStorage.setItem('sirian_phone', p);
+  document.getElementById('page-login').classList.remove('active');
+  document.getElementById('page-main').classList.add('active');
+  renderAll();
+}
+function logout(){ localStorage.removeItem('sirian_phone'); location.reload(); }
+function backToApp(){ document.getElementById('page-owner').classList.remove('active'); document.getElementById('page-main').classList.add('active'); renderAll(); }
+function showTab(t){
+  ['chats','groups','status','calls'].forEach(x=>{
+    document.getElementById('tab-'+x+'-div').classList.add('hidden');
+    document.getElementById('tab-'+x).classList.remove('active');
+  });
+  document.getElementById('tab-'+t+'-div').classList.remove('hidden');
+  document.getElementById('tab-'+t).classList.add('active');
+}
+function renderAll(){ renderChats(); renderGroups(); renderStatus(); updateStats(); }
+function updateStats(){
+  document.getElementById('statUsers').innerText = 1 + chats.length;
+  document.getElementById('statChats').innerText = chats.length;
+  document.getElementById('statGroups').innerText = groups.length;
+}
+function addChat(){
+  let n = document.getElementById('newName').value.trim();
+  if(!n) return alert(curLang==='sw'?'Andika jina kwanza':'Write a name first');
+  chats.unshift({name:n, msgs:[{t:curLang==='sw'?'Karibu SIRIAN! 👋':'Welcome to SIRIAN! 👋', me:false}]});
+  localStorage.setItem('sirian_chats', JSON.stringify(chats));
+  document.getElementById('newName').value='';
+  renderChats(); updateStats();
+}
+function renderChats(){
+  let el = document.getElementById('chatList');
+  if(chats.length===0){ el.innerHTML=`<div class="card"><p class="small">${curLang==='sw'?'Huna Chats bado. Andika jina la rafiki juu uanze ku-chat!':'No Chats yet. Write a friend name above to start chatting!'}</p></div>`; return; }
+  el.innerHTML = chats.map((c,i)=>`<div class="chat-item" onclick="openChat(${i})"><div class="avatar">${c.name.charAt(0).toUpperCase()}</div><div style="flex:1"><b>${c.name}</b><br><span style="color:#8696a0;font-size:13px">${c.msgs[c.msgs.length-1]?.t||''}</span></div><span class="badge">SIRIAN</span></div>`).join('');
+}
+function openChat(i){ currentChat=i; document.getElementById('chatTitle').innerText = '💬 '+chats[i].name; document.getElementById('chatWindow').classList.remove('hidden'); renderMsgs(); }
+function closeChat(){ document.getElementById('chatWindow').classList.add('hidden'); }
+function renderMsgs(){ document.getElementById('messages').innerHTML = chats[currentChat].msgs.map(m=>`<div class="msg ${m.me?'me':''}">${m.t}</div>`).join(''); }
+function sendMsg(){
+  let inp=document.getElementById('msgInput'); let t=inp.value.trim(); if(!t||currentChat===null) return;
+  chats[currentChat].msgs.push({t:t, me:true});
+  localStorage.setItem('sirian_chats', JSON.stringify(chats));
+  inp.value=''; renderMsgs(); renderChats();
+  setTimeout(()=>{ chats[currentChat].msgs.push({t:curLang==='sw'?'Sawa, nimepokea! 👍':'Okay, received! 👍', me:false}); localStorage.setItem('sirian_chats', JSON.stringify(chats)); renderMsgs(); renderChats(); }, 1000);
+}
+function addGroup(){
+  let n=document.getElementById('groupName').value.trim(); if(!n) return alert(curLang==='sw'?'Andika jina la Group':'Write Group name');
+  groups.unshift({name:n}); localStorage.setItem('sirian_groups', JSON.stringify(groups));
+  document.getElementById('groupName').value=''; renderGroups(); updateStats();
+}
+function renderGroups(){ document.getElementById('groupList').innerHTML = groups.map(g=>`<div class="chat-item"><div class="avatar">👥</div><div><b>${g.name}</b><br><span style="color:#8696a0;font-size:13px">Group ya SIRIAN</span></div></div>`).join('') || `<div class="card"><p class="small">${curLang==='sw'?'Huna Group bado':'No Group yet'}</p></div>`; }
+function addStatus(){
+  let t=document.getElementById('statusText').value.trim(); if(!t) return;
+  statuses.unshift({t:t, time:curLang==='sw'?'Sasa hivi':'Just now'}); localStorage.setItem('sirian_status', JSON.stringify(statuses));
+  document.getElementById('statusText').value=''; renderStatus();
+}
+function renderStatus(){ document.getElementById('statusList').innerHTML = statuses.map(s=>`<div class="chat-item"><div class="avatar">😊</div><div><b>${curLang==='sw'?'Wewe':'You'}</b><br>${s.t}<br><span style="color:#8696a0;font-size:12px">${s.time}</span></div></div>`).join('') || `<div class="card"><p class="small">${curLang==='sw'?'Huna Status bado':'No Status yet'}</p></div>`; }
 </script>
 </body>
 </html>
