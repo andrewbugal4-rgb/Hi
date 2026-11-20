@@ -3,4 +3,210 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="data:image/svg+xml,[STRIPPED]
+<title>SIRIAN</title>
+<link rel="icon" href="data:image/svg+xml,[STRIPPED]">
+<meta name="theme-color" content="#1e90ff">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#eef4fb;color:#111827}
+header{background:#1e90ff;color:#fff;padding:12px 16px;position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#4db2ff,#0060d6);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.25);border:2px solid rgba(255,255,255,.6)}
+.logo b{font-size:20px;letter-spacing:1px}
+.logo small{font-size:11px;opacity:.9;display:block}
+.badge{background:#fff;color:#1e90ff;padding:4px 10px;border-radius:999px;font-weight:800;font-size:12px}
+.wrap{max-width:900px;margin:0 auto;padding:14px 12px 90px}
+.card{background:#fff;border-radius:16px;padding:14px;box-shadow:0 4px 14px rgba(0,0,0,.06);margin-bottom:12px}
+h2{font-size:16px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{border-radius:14px;padding:12px;color:#fff}
+.stat small{opacity:.9;font-size:12px}
+.stat b{font-size:20px;display:block;margin-top:4px}
+.blue{background:#1e90ff}.green{background:#22c55e}.orange{background:#f97316}.purple{background:#8b5cf6}
+label{font-size:13px;font-weight:600;display:block;margin:10px 0 5px}
+input,select{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:10px;font-size:15px;background:#fff}
+.row{display:flex;gap:8px}
+.row>*{flex:1}
+.btn{border:0;border-radius:10px;padding:12px;font-weight:800;cursor:pointer;font-size:15px}
+.btn-blue{background:#1e90ff;color:#fff;width:100%}
+.btn-green{background:#22c55e;color:#fff;width:100%}
+.btn-red{background:#ef4444;color:#fff}
+.btn-gray{background:#e5e7eb}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:9px 8px;border-bottom:1px solid #eee;text-align:left}
+th{font-size:12px;color:#6b7280}
+.item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #eee}
+.item b{font-size:15px}
+.item small{color:#6b7280}
+.qty{display:flex;gap:6px;align-items:center}
+.qty button{width:28px;height:28px;border-radius:8px;border:1px solid #ddd;background:#f3f4f6;font-weight:800}
+.total{font-size:20px;font-weight:800;text-align:right;margin-top:10px}
+.muted{color:#6b7280;font-size:13px}
+.fab{position:fixed;right:16px;bottom:16px;background:#1e90ff;color:#fff;border:0;width:56px;height:56px;border-radius:50%;font-size:26px;box-shadow:0 8px 20px rgba(30,144,255,.4)}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button{flex:1;padding:11px;border:0;border-radius:999px;background:#fff;font-weight:700}
+.tabs button.on{background:#1e90ff;color:#fff}
+.hide{display:none}
+.search{margin-bottom:10px}
+.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#1e90ff,#0060d6);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;flex-shrink:0}
+.chat-head{display:flex;align-items:center;gap:10px}
+@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo"><div class="logo-icon">S</div><div><b>SIRIAN</b><small>Mfumo wa Uuzaji • Mbeya</small></div></div>
+<div class="badge" id="todayBadge">Leo</div>
+</header>
+<div class="wrap">
+<div class="tabs">
+<button id="tabSales" class="on" onclick="showTab('sales')">🛒 Uza</button>
+<button id="tabStock" onclick="showTab('stock')">📦 Stock</button>
+<button id="tabReport" onclick="showTab('report')">📊 Ripoti</button>
+</div>
+<div id="page-sales">
+<div class="card grid">
+<div class="stat blue"><small>💰 Mauzo ya Leo</small><b id="salesToday">TSh 0</b></div>
+<div class="stat green"><small>📦 Bidhaa Zilizo</small><b id="countProducts">0</b></div>
+<div class="stat orange"><small>🧾 Risiti Leo</small><b id="countSales">0</b></div>
+<div class="stat purple"><small>⚠️ Stock Chini</small><b id="lowStock">0</b></div>
+</div>
+<div class="card">
+<h2>➕ Ongeza Bidhaa Mpya</h2>
+<label>Jina la Bidhaa</label>
+<input id="pName" placeholder="Mf: Sukari 1kg">
+<div class="row">
+<div><label>Bei (TSh)</label><input id="pPrice" type="number" placeholder="5000"></div>
+<div><label>Idadi</label><input id="pQty" type="number" placeholder="20"></div>
+</div>
+<button class="btn btn-blue" style="margin-top:12px" onclick="addProduct()">💾 Hifadhi Bidhaa</button>
+</div>
+<div class="card">
+<h2>🛒 Uza Bidhaa</h2>
+<input class="search" id="searchSale" placeholder="🔍 Tafuta bidhaa..." oninput="renderSaleList()">
+<div id="saleList"></div>
+<div class="total">Jumla: <span id="cartTotal">TSh 0</span></div>
+<label>Jina la Mteja (hiari)</label>
+<input id="custName" placeholder="Mf: Mama Asha">
+<label>Namba ya Mteja (hiari)</label>
+<input id="custPhone" placeholder="Mf: 0755...">
+<button class="btn btn-green" style="margin-top:12px" onclick="checkout()">✅ Maliza Mauzo + Tuma Risiti</button>
+<button class="btn btn-gray" style="margin-top:8px" onclick="clearCart()">🗑️ Futa Kikapu</button>
+</div>
+<div class="card">
+<h2>🧾 Mauzo ya Mwisho</h2>
+<div id="recentSales" class="muted">Hakuna mauzo bado.</div>
+</div>
+</div>
+<div id="page-stock" class="hide">
+<div class="card">
+<h2>📦 Stock Zote</h2>
+<input class="search" id="searchStock" placeholder="🔍 Tafuta..." oninput="renderStock()">
+<div id="stockList"></div>
+</div>
+</div>
+<div id="page-report" class="hide">
+<div class="card">
+<h2>📊 Ripoti ya Leo</h2>
+<div class="muted" id="reportText"></div>
+<div style="display:flex;gap:8px;margin-top:12px">
+<button class="btn btn-blue" onclick="exportCSV()">⬇️ Pakua Excel (CSV)</button>
+<button class="btn btn-red" onclick="resetAll()">🗑️ Futa Yote</button>
+</div>
+</div>
+<div class="card">
+<h2>📜 Historia ya Mauzo</h2>
+<div id="allSales"></div>
+</div>
+</div>
+</div>
+<button class="fab" onclick="showTab('sales')">+</button>
+<script>
+let products=JSON.parse(localStorage.getItem('sirian_products')||'[]');
+let sales=JSON.parse(localStorage.getItem('sirian_sales')||'[]');
+let cart={};
+function save(){localStorage.setItem('sirian_products',JSON.stringify(products));localStorage.setItem('sirian_sales',JSON.stringify(sales));}
+function money(n){return 'TSh '+Number(n||0).toLocaleString('en-US')}
+function showTab(t){
+['sales','stock','report'].forEach(x=>{
+document.getElementById('page-'+x).classList.toggle('hide',x!==t);
+document.getElementById('tab'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('on',x===t);
+});
+renderAll();
+}
+function addProduct(){
+let n=document.getElementById('pName').value.trim();
+let p=parseFloat(document.getElementById('pPrice').value);
+let q=parseInt(document.getElementById('pQty').value);
+if(!n||!p||isNaN(q)){alert('Jaza jina, bei na idadi');return;}
+products.push({id:Date.now(),name:n,price:p,qty:q});
+document.getElementById('pName').value='';document.getElementById('pPrice').value='';document.getElementById('pQty').value='';
+save();renderAll();alert('Bidhaa imehifadhiwa ✅');
+}
+function renderSaleList(){
+let s=(document.getElementById('searchSale').value||'').toLowerCase();
+let html='';
+products.filter(p=>p.name.toLowerCase().includes(s)).forEach(p=>{
+let c=cart[p.id]||0;
+html+=`<div class="item"><div class="chat-head"><div class="avatar">S</div><div><b>${p.name}</b><br><small>${money(p.price)} • Stock: ${p.qty}</small></div></div><div class="qty"><button onclick="changeQty(${p.id},-1)">-</button><b>${c}</b><button onclick="changeQty(${p.id},1)">+</button></div></div>`;
+});
+document.getElementById('saleList').innerHTML=html||'<p class="muted">Hakuna bidhaa. Ongeza kwanza.</p>';
+let total=0;for(let id in cart){let pr=products.find(x=>x.id==id);if(pr)total+=pr.price*cart[id];}
+document.getElementById('cartTotal').innerText=money(total);
+}
+function changeQty(id,d){
+let p=products.find(x=>x.id==id);if(!p)return;
+let cur=cart[id]||0;let nxt=cur+d;
+if(nxt<0)nxt=0;if(nxt>p.qty){alert('Stock haitoshi!');return;}
+if(nxt==0)delete cart[id];else cart[id]=nxt;
+renderSaleList();
+}
+function clearCart(){cart={};renderSaleList();}
+function checkout(){
+let items=[];let total=0;
+for(let id in cart){let pr=products.find(x=>x.id==id);if(!pr)continue;items.push({name:pr.name,price:pr.price,qty:cart[id]});total+=pr.price*cart[id];pr.qty-=cart[id];}
+if(!items.length){alert('Chagua bidhaa kwanza');return;}
+let cust=document.getElementById('custName').value||'Mteja';
+let phone=document.getElementById('custPhone').value||'';
+let sale={id:Date.now(),date:new Date().toLocaleString('sw-TZ'),cust,phone,items,total};
+sales.unshift(sale);cart={};
+document.getElementById('custName').value='';document.getElementById('custPhone').value='';
+save();renderAll();
+let msg=`🧾 *SIRIAN - RISITI*%0A%0A👤 Mteja: ${encodeURIComponent(cust)}%0A📅 ${encodeURIComponent(sale.date)}%0A----------------%0A`+items.map(i=>`• ${encodeURIComponent(i.name)} x${i.qty} = ${i.total||i.price*i.qty}`).join('%0A')+`%0A----------------%0A💰 *JUMLA: TSh ${total.toLocaleString()}*%0A%0AAsante karibu tena! 💙`;
+if(phone){window.open(`https://wa.me/255${phone.replace(/^0/,'')}?text=${msg}`,'_blank');}
+else{alert('Mauzo yamekamilika ✅\nJumla: '+money(total));}
+}
+function renderStock(){
+let s=(document.getElementById('searchStock').value||'').toLowerCase();
+let html='<table><tr><th>Bidhaa</th><th>Bei</th><th>Stock</th><th></th></tr>';
+products.filter(p=>p.name.toLowerCase().includes(s)).forEach(p=>{
+html+=`<tr><td>${p.name}</td><td>${money(p.price)}</td><td>${p.qty}</td><td><button class="btn btn-red" style="padding:6px 10px" onclick="delProduct(${p.id})">Futa</button></td></tr>`;
+});
+html+='</table>';
+document.getElementById('stockList').innerHTML=products.length?html:'<p class="muted">Hakuna bidhaa.</p>';
+}
+function delProduct(id){if(confirm('Futa bidhaa hii?')){products=products.filter(p=>p.id!==id);save();renderAll();}}
+function renderAll(){
+let today=new Date().toDateString();
+let todaySales=sales.filter(s=>new Date(s.id).toDateString()==today);
+let todayTotal=todaySales.reduce((a,b)=>a+b.total,0);
+document.getElementById('salesToday').innerText=money(todayTotal);
+document.getElementById('countProducts').innerText=products.length;
+document.getElementById('countSales').innerText=todaySales.length;
+document.getElementById('lowStock').innerText=products.filter(p=>p.qty<=3).length;
+document.getElementById('todayBadge').innerText=new Date().toLocaleDateString('sw-TZ',{day:'numeric',month:'short'});
+document.getElementById('recentSales').innerHTML=todaySales.slice(0,5).map(s=>`<div class="item"><div><b>${s.cust}</b><br><small>${s.date}</small></div><b>${money(s.total)}</b></div>`).join('')||'Hakuna mauzo bado.';
+document.getElementById('allSales').innerHTML=sales.map(s=>`<div class="item"><div><b>${s.cust}</b><br><small>${s.date} • ${s.items.map(i=>i.name+' x'+i.qty).join(', ')}</small></div><b>${money(s.total)}</b></div>`).join('')||'<p class="muted">Hakuna historia.</p>';
+document.getElementById('reportText').innerHTML=`Mauzo ya leo: <b>${money(todayTotal)}</b><br>Risiti leo: <b>${todaySales.length}</b><br>Jumla mauzo yote: <b>${money(sales.reduce((a,b)=>a+b.total,0))}</b><br>Bidhaa zilizopo: <b>${products.length}</b>`;
+renderSaleList();renderStock();
+}
+function exportCSV(){
+let csv='Tarehe,Mteja,Simu,Bidhaa,Idadi,Bei,Jumla\n';
+sales.forEach(s=>{s.items.forEach(i=>{csv+=`"${s.date}","${s.cust}","${s.phone}","${i.name}",${i.qty},${i.price},${i.price*i.qty}\n`;});});
+let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='sirian-ripoti.csv';a.click();
+}
+function resetAll(){if(confirm('Futa bidhaa na mauzo YOTE?')){products=[];sales=[];cart={};save();renderAll();}}
+renderAll();
+</script>
+</body>
+</html>
